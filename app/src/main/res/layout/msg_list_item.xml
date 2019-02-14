@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layoutDirection="rtl"
+    android:id="@+id/layout"
+    android:orientation="horizontal"
+    android:background="@drawable/shadow_back"
+    android:padding="5dp">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:fontFamily="@fonts/iran_san"
+                android:gravity="right|center"
+                android:paddingRight="5dp"
+                android:text="" />
+            <TextView
+                android:id="@+id/msgNew"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity=""
+                android:background="@drawable/circle_drawable"/>
+
+
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:fontFamily="@fonts/iran_san"
+                android:gravity="left|center"
+                android:paddingRight="5dp"
+                android:text="" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_body"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.3"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:fontFamily="@fonts/iran_san"
+            android:gravity="right"
+            android:paddingRight="5dp"
+            android:textColor="#161111" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:layout_marginBottom="10sp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_background"
+                android:text="پذیرش"  />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_background_gray"
+                android:text="عدم پذیرش"  />
+
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
