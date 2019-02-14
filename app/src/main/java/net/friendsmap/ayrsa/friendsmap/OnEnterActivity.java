@@ -66,20 +66,26 @@ public class OnEnterActivity extends AppCompatActivity {
         _ruleTxt.setTypeface(baseFont);
         _sendCodeBtn.setTypeface(baseFont);
         _helpTxt.setTypeface(baseFont);
+        String mobileFromIntent = getIntent().getStringExtra("Mobile");
+        _mobileNumber.setText(mobileFromIntent);
 
         _sendCodeBtn.setOnClickListener(view -> {
             String mobile = _mobileNumber.getText().toString();
             //String st = GeneralTools.readFromFile(BeforeLoginActivity.this);
-            if (mobile.trim().length() > 0) {
-                if (mobile.trim().length() != 11 || !mobile.trim().startsWith("09")) {
-                    StyleableToast.makeText(OnEnterActivity.this, "شماره موبایل وارد شده معتبر نیست", Toast.LENGTH_LONG, R.style.warning).show();
-                    return;
-                }
-                _sendCodeBtn.setVisibility(View.GONE);
-                SendCode(mobile);
+            if (mobileFromIntent == null) {
+                if (mobile.trim().length() > 0) {
+                    if (mobile.trim().length() != 11 || !mobile.trim().startsWith("09")) {
+                        StyleableToast.makeText(OnEnterActivity.this, "شماره موبایل وارد شده معتبر نیست", Toast.LENGTH_LONG, R.style.warning).show();
+                        return;
+                    }
+                    _sendCodeBtn.setVisibility(View.GONE);
+                    SendCode(mobile, false);
 
+                } else {
+                    StyleableToast.makeText(FriendsMap.getContext(), "لطفا شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG, R.style.warning).show();
+                }
             } else {
-                StyleableToast.makeText(FriendsMap.getContext(), "لطفا شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG, R.style.warning).show();
+                SendCode(mobile, true);
             }
 
         });
@@ -96,15 +102,16 @@ public class OnEnterActivity extends AppCompatActivity {
 
     }
 
-    public void SendCode(String mobileNumber) {
+    public void SendCode(String mobileNumber, boolean needVerification) {
         OnEnterActivity context = OnEnterActivity.this;
 
         AVLoadingIndicatorView loadingIndicatorView = findViewById(R.id.avi);
         GeneralUtils.showLoading(loadingIndicatorView);
 
         NetworkManager.builder()
-                .setUrl(FriendsMap.BaseUrl + "/api/VerificationCode/RequestVerification/{Mobile}")
+                .setUrl(FriendsMap.BaseUrl + "/api/VerificationCode/RequestVerification/{Mobile}/{NeedVerification}")
                 .addPathParameter("Mobile", mobileNumber)
+                .addPathParameter("NeedVerification", Boolean.toString(needVerification))
                 .get(new TypeToken<ClientData<User>>() {
                 }, new INetwork<ClientData<User>>() {
                     @Override
@@ -121,6 +128,7 @@ public class OnEnterActivity extends AppCompatActivity {
                             GeneralUtils.hideLoading(loadingIndicatorView);
                             Intent intent = new Intent(context, VerificationActivity.class);
                             intent.putExtra("MobileNumber", mobileNumber);
+                            intent.putExtra("NeedVerification", response.getEntityId());
                             startActivity(intent);
                         }
                         _sendCodeBtn.setVisibility(View.VISIBLE);

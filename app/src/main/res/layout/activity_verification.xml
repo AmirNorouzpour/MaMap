@@ -111,17 +111,17 @@
             android:background="@drawable/button_background"
             android:text="ثبت" />
 
-        <Button
-            android:id="@+id/SendCodeAgainBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ارسال مجدد کد"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/colorWhite"
-            android:background="@drawable/button_background"
-            android:visibility="visible" />
+        <!--<Button-->
+            <!--android:id="@+id/SendCodeAgainBtn"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="ارسال مجدد کد"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:background="@drawable/button_background"-->
+            <!--android:visibility="visible" />-->
 
         <TextView
             android:id="@+id/SendCodeText"
@@ -130,14 +130,17 @@
             android:paddingTop="20dp"
             android:text="" />
 
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:indicatorName="BallClipRotateMultipleIndicator"
+            />
+
     </LinearLayout>
 
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/avi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:indicatorName="BallClipRotateMultipleIndicator"
-        />
+
 
 </android.support.constraint.ConstraintLayout>

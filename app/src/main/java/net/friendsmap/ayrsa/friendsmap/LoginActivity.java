@@ -70,6 +70,9 @@ public class LoginActivity extends AppCompatActivity {
         title.setTextSize(22);
         RememberMeTxt.setOnClickListener(v ->
         {
+            Intent intent = new Intent(LoginActivity.this, OnEnterActivity.class);
+            intent.putExtra("Mobile", MobileNumber.getText().toString());
+            startActivity(intent);
         });
 
         DisplayMetrics displayMetrics = new DisplayMetrics();

@@ -1,7 +1,6 @@
 package net.friendsmap.ayrsa.friendsmap;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -33,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     ConstraintLayout _layout;
     LinearLayout _formHolder;
     TextView IHaveMeTxt;
+    String mobileNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +66,22 @@ public class RegisterActivity extends AppCompatActivity {
         BackView defaultBackgeroundDrawable = new BackView();
         _layout.setBackground(defaultBackgeroundDrawable);
 
-        String mobileNumber = getIntent().getStringExtra("MobileNumber");
+        mobileNumber = getIntent().getStringExtra("MobileNumber");
+        String userName = getIntent().getStringExtra("UserName");
+        int needVerification = getIntent().getIntExtra("NeedVerification", 0);
+
         MobileTxt.setText(mobileNumber);
+        UserNameTxt.setText(userName);
         UserNameTxt.requestFocus();
         RegisterBtn.setOnClickListener(v -> {
+            if (PasswordTxt.getText().toString() != RePasswordTxt.getText().toString() || PasswordTxt.getText() == null || PasswordTxt.getText().toString().length() == 0) {
+                GeneralUtils.showToast("رمز عبور وارد شده با تکرارش برابر نیست", Toast.LENGTH_SHORT, OutType.Error);
+                return;
+            }
+            if (UserNameTxt.getText() == null) {
+                GeneralUtils.showToast("نام کاریری خود را انتخاب کنید", Toast.LENGTH_SHORT, OutType.Error);
+                return;
+            }
             User user = new User();
             user.setMobile(mobileNumber);
             user.setPassword(PasswordTxt.getText().toString());
@@ -78,36 +90,79 @@ public class RegisterActivity extends AppCompatActivity {
             AVLoadingIndicatorView loadingIndicatorView = findViewById(R.id.avi);
             GeneralUtils.showLoading(loadingIndicatorView);
 
-            NetworkManager.builder()
-                    .setUrl(FriendsMap.BaseUrl + "/api/user/AddUser")
-                    .addApplicationJsonBody(user)
-                    .post(new TypeToken<ClientData<Token>>() {
-                    }, new INetwork<ClientData<Token>>() {
-
-                        @Override
-                        public void onResponse(ClientData<Token> data) {
-                            GeneralUtils.hideLoading(loadingIndicatorView);
-                            GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
-                            if (data.getOutType() == OutType.Success) {
-                                Token token = data.getEntity();
-                                Intent intent = new Intent(context, MenuActivity.class);
-                                intent.putExtra("userId", token.userId);
-                                GeneralUtils.writeToken(token, token.userId, RegisterActivity.this);
-                                String FToken = null;
-                                FToken = FirebaseInstanceId.getInstance().getToken();
-                                LoginActivity.sendRegistrationToServer(FToken);
-                                startActivity(intent);
-                            }
-                        }
-
-                        @Override
-                        public void onError(ANError anError) {
-                            GeneralUtils.hideLoading(loadingIndicatorView);
-                            GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
-                        }
-                    });
-
+            if (needVerification == 1) {
+                UpdatePassword(loadingIndicatorView);
+            } else {
+                AddUser(user, context, loadingIndicatorView);
+            }
         });
+    }
+
+    private void UpdatePassword(AVLoadingIndicatorView loadingIndicatorView) {
+        User user = new User();
+        user.setMobile(mobileNumber);
+        user.setPassword(PasswordTxt.getText().toString());
+
+        NetworkManager.builder()
+                .setUrl(FriendsMap.BaseUrl + "/api/user/UpdatePassword")
+                .addApplicationJsonBody(user)
+                .post(new TypeToken<ClientDataNonGeneric>() {
+                }, new INetwork<ClientDataNonGeneric>() {
+
+                    @Override
+                    public void onResponse(ClientDataNonGeneric data) {
+                        GeneralUtils.hideLoading(loadingIndicatorView);
+                        GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
+                        if (data.getOutType() == OutType.Success) {
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            intent.putExtra("MobileNumber", mobileNumber);
+                            User user = new User();
+                            user.setUserId(data.getEntityId());
+                            intent.putExtra("User", user);
+
+
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        GeneralUtils.hideLoading(loadingIndicatorView);
+                        GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
+                    }
+                });
+    }
+
+
+    private void AddUser(User user, RegisterActivity context, AVLoadingIndicatorView loadingIndicatorView) {
+        NetworkManager.builder()
+                .setUrl(FriendsMap.BaseUrl + "/api/user/AddUser")
+                .addApplicationJsonBody(user)
+                .post(new TypeToken<ClientData<Token>>() {
+                }, new INetwork<ClientData<Token>>() {
+
+                    @Override
+                    public void onResponse(ClientData<Token> data) {
+                        GeneralUtils.hideLoading(loadingIndicatorView);
+                        GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
+                        if (data.getOutType() == OutType.Success) {
+                            Token token = data.getEntity();
+                            Intent intent = new Intent(context, MenuActivity.class);
+                            intent.putExtra("userId", token.userId);
+                            GeneralUtils.writeToken(token, token.userId, RegisterActivity.this);
+                            String FToken = null;
+                            FToken = FirebaseInstanceId.getInstance().getToken();
+                            LoginActivity.sendRegistrationToServer(FToken);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        GeneralUtils.hideLoading(loadingIndicatorView);
+                        GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
+                    }
+                });
     }
 }
 

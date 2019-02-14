@@ -38,9 +38,10 @@ import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
 public class VerificationActivity extends AppCompatActivity {
 
     EditText editText1, editText2, editText3, editText4;
-    Button sendCodeAgainBtn, okBtn;
+    Button okBtn;//sendCodeAgainBtn,
     TextView sendCodeText, OTPTxt, remainTimeText;
     ConstraintLayout _layout;
+    int needVerification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class VerificationActivity extends AppCompatActivity {
         editText4 = findViewById(R.id.EditText4);
         editText4 = findViewById(R.id.EditText4);
         sendCodeText = findViewById(R.id.SendCodeText);
-        sendCodeAgainBtn = findViewById(R.id.SendCodeAgainBtn);
+        //sendCodeAgainBtn = findViewById(R.id.SendCodeAgainBtn);
         _layout = findViewById(R.id.backgroundLayout);
         remainTimeText = findViewById(R.id.RemianTimeTxt);
         okBtn = findViewById(R.id.OkBtn);
@@ -66,13 +67,14 @@ public class VerificationActivity extends AppCompatActivity {
         editText4.setTypeface(baseFont);
         sendCodeText.setTypeface(baseFont);
         remainTimeText.setTypeface(baseFont);
-        sendCodeAgainBtn.setTypeface(baseFont);
+        //   sendCodeAgainBtn.setTypeface(baseFont);
         okBtn.setTypeface(baseFont);
         OTPTxt.setTypeface(baseFont);
         OTPTxt.setTextSize(22);
         okBtn.setTextSize(14);
 
         String mobileNumber = getIntent().getStringExtra("MobileNumber");
+        needVerification = getIntent().getIntExtra("NeedVerification", 0);
         sendCodeText.setText("کد 4 رقمی ارسال شده به " + mobileNumber + " را وارد کنید");
 
 
@@ -157,9 +159,10 @@ public class VerificationActivity extends AppCompatActivity {
                     String code = getCode();
 
                     NetworkManager.builder()
-                            .setUrl(FriendsMap.BaseUrl + "/api/VerificationCode/CheckVerificationCode/{Mobile}/{Code}")
+                            .setUrl(FriendsMap.BaseUrl + "/api/VerificationCode/CheckVerificationCode/{Mobile}/{Code}/{NeedVerification}")
                             .addPathParameter("Mobile", mobileNumber)
                             .addPathParameter("Code", code)
+                            .addPathParameter("NeedVerification", Integer.toString(needVerification))
                             .get(new TypeToken<ClientDataNonGeneric>() {
                             }, new INetwork<ClientDataNonGeneric>() {
 
@@ -170,6 +173,9 @@ public class VerificationActivity extends AppCompatActivity {
                                     if (data.getOutType() == OutType.Success) {
                                         Intent intent = new Intent(VerificationActivity.this, RegisterActivity.class);
                                         intent.putExtra("MobileNumber", mobileNumber);
+                                        intent.putExtra("NeedVerification", needVerification);
+                                        if (data.getTag() != null)
+                                            intent.putExtra("UserName", data.getTag().toString());
                                         startActivity(intent);
                                     }
                                 }
@@ -196,18 +202,18 @@ public class VerificationActivity extends AppCompatActivity {
         _layout.setBackground(defaultBackgeroundDrawable);
 
 
-        new CountDownTimer(60000, 1000) {
+        new CountDownTimer(120000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 remainTimeText.setText("زمان باقی مانده " + millisUntilFinished / 1000 + " ثانیه ");
-                sendCodeAgainBtn.setVisibility(View.GONE);
+                // sendCodeAgainBtn.setVisibility(View.GONE);
             }
 
             public void onFinish() {
                 remainTimeText.setText("زمان به پایان رسید!");
                 /*sendCodeBtn.setVisibility(View.VISIBLE);
                 sendCodeBtn.setText("ارسال مجدد کد");*/
-                sendCodeAgainBtn.setVisibility(View.VISIBLE);
+                //  sendCodeAgainBtn.setVisibility(View.VISIBLE);
                 okBtn.setVisibility(View.GONE);
             }
         }.start();
