@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    tools:context=".SupportActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/m_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorAccent"
+        app:theme="@style/ToolbarTheme">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="right"
+            android:layout_margin="20sp"
+            android:fontFamily="@font/iran_sani"
+            android:text="ارتباط با ما"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="15"
+        android:background="@drawable/red_border"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/txt_AboutUs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/iran_sani"
+            android:paddingRight="5dp"
+            android:text="@string/ContactUsDesc"
+            android:textColor="@color/colorText" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="80"
+        android:weightSum="100"
+        android:background="@drawable/red_border"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/EmailTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/iran_sani"
+            android:gravity="center"
+            android:hint="ایمیل"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText2" />
+
+
+        <com.isapanah.awesomespinner.AwesomeSpinner
+            android:id="@+id/ReqType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="20"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/iran_sani"
+            app:spinnerDirection="rtl"
+            app:spinnerHint="نوع درخواست" />
+
+
+        <EditText
+            android:id="@+id/Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/iran_sani"
+            android:gravity="right"
+            android:hint="پیام"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:minLines="5"
+            android:layout_weight="40"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText2" />
+
+        <Button
+            android:id="@+id/SaveCodeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/iran_sani"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_background"
+            android:text="ثبت"  />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            app:indicatorColor="@color/colorText2"
+            app:indicatorName="BallClipRotateMultipleIndicator"
+            />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

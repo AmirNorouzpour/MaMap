@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapFragment">
+
+
+    <fragment
+        android:id="@+id/myMapView"
+        class="ir.map.sdk_map.wrapper.SupportMaptexFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity=""></fragment>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FindMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_my_location_white_24dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FindFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginRight="80dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_refresh"
+        android:tooltipText="Ali" />
+
+    <TextView
+        android:id="@+id/StatusTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:text="" />
+</FrameLayout>

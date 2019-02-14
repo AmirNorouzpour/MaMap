@@ -1,0 +1,58 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="warning">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#000</item>
+        <item name="stFont">@font/iran_sani</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#ffffff</item>
+        <item name="stSolidBackground">true</item>
+       <item name="stStrokeWidth">1dp</item>
+        <item name="stStrokeColor">#ffe602</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="error">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#000</item>
+        <item name="stFont">@font/iran_sani</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#ffe1e1</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">1dp</item>
+        <item name="stStrokeColor">#f50817</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="success">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#000</item>
+        <item name="stFont">@font/iran_sani</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#f5fce8</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">1dp</item>
+        <item name="stStrokeColor">#109914</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+
+</resources>

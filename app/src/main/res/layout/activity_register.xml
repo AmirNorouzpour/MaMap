@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/backgroundLayout"
+    tools:context=".RegisterActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:id="@+id/formHolder"
+        android:orientation="vertical">
+
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@mipmap/login" />-->
+
+        <EditText
+            android:id="@+id/MobileNumberTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="شماره تلفن همراه"
+            android:inputType="phone"
+            android:paddingTop="20dp"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText2" />
+
+        <EditText
+            android:id="@+id/UserNameTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:hint="نام کاربری"
+            android:inputType="text"
+            android:paddingTop="20dp"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText2" />
+
+        <EditText
+            android:id="@+id/PasswordTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:hint="رمز عبور"
+            android:inputType="textPassword"
+            android:paddingTop="20dp"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText2" />
+
+        <EditText
+            android:id="@+id/RePasswordTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:hint="تکرار رمز عبور"
+            android:inputType="textPassword"
+            android:paddingTop="20dp"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText2" />
+
+        <Button
+            android:id="@+id/RegisterBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_background"
+            android:text="ثبت" />
+
+        <TextView
+            android:id="@+id/IHaveMeTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="حساب کاربری دارید؟ وارد شوید."
+            android:visibility="visible" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center|bottom"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorName="BallClipRotateMultipleIndicator"
+        />
+
+</android.support.constraint.ConstraintLayout>
