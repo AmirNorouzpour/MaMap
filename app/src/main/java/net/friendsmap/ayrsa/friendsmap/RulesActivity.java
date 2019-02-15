@@ -3,6 +3,7 @@ package net.friendsmap.ayrsa.friendsmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,13 @@ public class RulesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rules);
         loadingIndicatorView = findViewById(R.id.avi);
         TextView toolbar_title = findViewById(R.id.toolbar_title);
+
+        Toolbar mToolbar = findViewById(R.id.m_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mToolbar.setNavigationOnClickListener(v -> finish());
 
         int key = getIntent().getIntExtra("Key", -1);
         if (key == 1) {

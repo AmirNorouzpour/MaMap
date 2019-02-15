@@ -26,6 +26,7 @@ import net.friendsmap.ayrsa.friendsmap.Models.OutType;
 import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
 import net.friendsmap.ayrsa.friendsmap.network.INetwork;
 import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
+
 import ir.map.sdk_common.MaptexLatLng;
 import ir.map.sdk_map.wrapper.MaptexBitmapDescriptorFactory;
 import ir.map.sdk_map.wrapper.MaptexCameraUpdateFactory;
@@ -53,10 +54,10 @@ public class MapFragment extends Fragment {
         //if it is DashboardFragment it should have R.layout.fragment_dashboard
         if (getArguments() != null)
             _friendMap = (FriendMap) getArguments().getSerializable("FriendMap");
-        else {
-            GeneralUtils.showToast("برای مشاهده نقشه یکی از دوستان خود را انتخاب کنید", Toast.LENGTH_SHORT, OutType.Warning);
-            return null;
-        }
+//        else {
+//            GeneralUtils.showToast("برای مشاهده نقشه یکی از دوستان خود را انتخاب کنید", Toast.LENGTH_SHORT, OutType.Warning);
+//            return null;
+//        }
         StatusTxt = view.findViewById(R.id.StatusTxt);
         MenuActivity menuActivity = (MenuActivity) getActivity();
         Typeface baseFont = Typeface.createFromAsset(menuActivity.getAssets(), "fonts/iran_san.ttf");
@@ -81,6 +82,8 @@ public class MapFragment extends Fragment {
 
     }
 
+    boolean isFirstTime = true;
+
     private void UpdateFriendLocation(FriendMap friendMap, boolean isInit) {
         if (friendMarker != null)
             friendMarker.remove();
@@ -102,8 +105,13 @@ public class MapFragment extends Fragment {
                     maptexMap.setMyLocationEnabled(true);
                 maptexMap.setBuildingsEnabled(true);
 
-                maptexMap.setOnMyLocationChangeListener(location ->
-                        _location = location
+                maptexMap.setOnMyLocationChangeListener(location -> {
+                            if (isFirstTime && _friendMap == null) {
+                                isFirstTime = false;
+                                maptexMap.animateCamera(MaptexCameraUpdateFactory.newLatLngZoom(new MaptexLatLng(location.getLatitude(), location.getLongitude()), FOCUSED_ZOOM_LEVEL));
+                            }
+                            _location = location;
+                        }
                 );
                 if (friendMap != null) {
                     MaptexLatLng userLoc = new MaptexLatLng(friendMap.getLatitude(), friendMap.getLongitude());
@@ -141,7 +149,7 @@ public class MapFragment extends Fragment {
                 }, new INetwork<ClientData<FriendMap>>() {
                     @Override
                     public void onResponse(ClientData<FriendMap> response) {
-                       // GeneralUtils.hideLoading(getView().findViewById(R.id.avi));
+                        // GeneralUtils.hideLoading(getView().findViewById(R.id.avi));
                         if (response.getOutType() == OutType.Success && response.getEntity() != null) {
                             FriendMap friendMap = response.getEntity();
                             StatusTxt.setText("پیدا شد");

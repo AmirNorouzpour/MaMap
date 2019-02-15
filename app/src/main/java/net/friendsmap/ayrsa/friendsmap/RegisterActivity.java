@@ -74,10 +74,11 @@ public class RegisterActivity extends AppCompatActivity {
         UserNameTxt.setText(userName);
         UserNameTxt.requestFocus();
         RegisterBtn.setOnClickListener(v -> {
-            if (PasswordTxt.getText().toString() != RePasswordTxt.getText().toString() || PasswordTxt.getText() == null || PasswordTxt.getText().toString().length() == 0) {
-                GeneralUtils.showToast("رمز عبور وارد شده با تکرارش برابر نیست", Toast.LENGTH_SHORT, OutType.Error);
-                return;
-            }
+            //todo : check it
+//            if (PasswordTxt.getText().toString() != RePasswordTxt.getText().toString() || PasswordTxt.getText() == null || PasswordTxt.getText().toString().length() == 0) {
+//                GeneralUtils.showToast("رمز عبور وارد شده با تکرارش برابر نیست", Toast.LENGTH_SHORT, OutType.Error);
+//                return;
+//            }
             if (UserNameTxt.getText() == null) {
                 GeneralUtils.showToast("نام کاریری خود را انتخاب کنید", Toast.LENGTH_SHORT, OutType.Error);
                 return;

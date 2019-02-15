@@ -41,9 +41,9 @@ public class SupportActivity extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.m_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mToolbar.setNavigationOnClickListener(v -> finish());
 
         mySpinner = findViewById(R.id.ReqType);
         EmailTxt = findViewById(R.id.EmailTxt);
