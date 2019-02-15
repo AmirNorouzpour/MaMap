@@ -125,6 +125,10 @@ public class GeneralUtils {
         return BuildConfig.VERSION_NAME;
     }
 
+    public static int GetVersionCode() {
+        return BuildConfig.VERSION_CODE;
+    }
+
     public static String GetDeviceInfo() {
         return "MANUFACTURER:" + Build.MANUFACTURER + ";Model:" + Build.MODEL + ";VersionRelease:" + Build.VERSION.RELEASE + ";VersionCode:" + Build.VERSION.SDK_INT;
     }

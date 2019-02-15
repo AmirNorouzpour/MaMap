@@ -30,8 +30,8 @@ import ir.oxima.dialogbuilder.DialogBuilderConfig;
 public class FriendsMap extends Application {
 
     private static Context sContext;
-     public static String BaseUrl ="http://api.tasnimfurniture.com";
-    //public static String BaseUrl = "http://192.168.1.100:8090";
+    public static String BaseUrl = "http://api.tasnimfurniture.com";
+    //public static String BaseUrl = "http://192.168.1.100:8080";
     public static net.friendsmap.ayrsa.friendsmap.Models.User User = null;
 
     public static Context getContext() {
