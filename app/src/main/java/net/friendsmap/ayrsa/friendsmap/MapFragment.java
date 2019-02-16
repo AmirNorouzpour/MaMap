@@ -1,6 +1,7 @@
 package net.friendsmap.ayrsa.friendsmap;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -23,9 +24,13 @@ import com.google.gson.reflect.TypeToken;
 import net.friendsmap.ayrsa.friendsmap.Models.ClientData;
 import net.friendsmap.ayrsa.friendsmap.Models.FriendMap;
 import net.friendsmap.ayrsa.friendsmap.Models.OutType;
+import net.friendsmap.ayrsa.friendsmap.Utils.CryptoHelper;
 import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
 import net.friendsmap.ayrsa.friendsmap.network.INetwork;
 import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import ir.map.sdk_common.MaptexLatLng;
 import ir.map.sdk_map.wrapper.MaptexBitmapDescriptorFactory;
@@ -34,6 +39,9 @@ import ir.map.sdk_map.wrapper.MaptexMap;
 import ir.map.sdk_map.wrapper.MaptexMarker;
 import ir.map.sdk_map.wrapper.MaptexMarkerOptions;
 import ir.map.sdk_map.wrapper.SupportMaptexFragment;
+import ir.oxima.dialogbuilder.DialogBuilder;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class MapFragment extends Fragment {
@@ -113,34 +121,52 @@ public class MapFragment extends Fragment {
                             _location = location;
                         }
                 );
-                if (friendMap != null) {
-                    MaptexLatLng userLoc = new MaptexLatLng(friendMap.getLatitude(), friendMap.getLongitude());
 
+                if (friendMap != null) {
+                    if (friendMap.isNotAvailable()) {
+                        GeneralUtils.showToast("کاربر مورد نظر از دسترس خارج شده است", Toast.LENGTH_LONG, OutType.Warning);
+                        return;
+                    }
+                    MaptexLatLng userLoc = new MaptexLatLng(friendMap.getLatitude(), friendMap.getLongitude());
                     Bitmap bitmap = GeneralUtils.getBitmap(getContext(), R.drawable.ic_pin);
                     friendMarker = maptexMap.addMarker(new MaptexMarkerOptions()
-                            .position(userLoc).title(friendMap.getNickName()).snippet("Ali Souri is Here").title("salam")
+                            .position(userLoc).title(friendMap.getNickName())
                             .icon(MaptexBitmapDescriptorFactory.fromBitmap(bitmap)));
 
-                    maptexMap.setOnMarkerClickListener(v -> showmsg(v));
+                    maptexMap.setOnMarkerClickListener(v -> showUser(v));
                     // maptexMap.addPolyline((new MaptexPolylineOptions()).add(userLoc, new MaptexLatLng(userLoc.latitude + 10, userLoc.longitude + 10)));
                     //maptexMap.addCircle(new MaptexCircleOptions().center(userLoc).fillColor(Color.parseColor("#cce6ff")));
                     maptexMap.animateCamera(MaptexCameraUpdateFactory.newLatLngZoom(userLoc, FOCUSED_ZOOM_LEVEL));
                     if (isInit) {
                         GetUserLocation(friendMap.getUserId(), true);
-
                     }
                 }
             }
         });
     }
 
-    private boolean showmsg(MaptexMarker marker) {
+    private boolean showUser(MaptexMarker marker) {
+
+        Date mDate = GeneralUtils.StringToDate(_friendMap.getSeen(), "yyyy-MM-dd'T'HH:mm:ss");
+        //String date = ShamsiDateUtil.getShmasiString(mDate);
+        Date currentTime = Calendar.getInstance().getTime();
+        String date = GeneralUtils.ComparativeDate(currentTime, mDate);
+
+        DialogBuilder dialogBuilder = new DialogBuilder(getActivity()).asBottomSheetDialog(true);
+        dialogBuilder.setTitle(_friendMap.getNickName());
+        int speed = (int) ((_friendMap.getSpeed() * 3600) / 1000);
+        dialogBuilder.setMessage(_friendMap.getNickName() + " با سرعت " + speed + " KM/H " + date + " در مختصات مشخص شده بوده است");
+        dialogBuilder.setPositiveButton("بروزرسانی", dialog -> {
+        });
+        dialogBuilder.setNegativeButton("بستن", dialog -> dialog.dismiss());
+
+        dialogBuilder.show();
         GeneralUtils.showToast(marker.getPosition().latitude + " " + marker.getPosition().longitude, Toast.LENGTH_LONG, OutType.Success);
         return true;
     }
 
     private void GetUserLocation(int userId, boolean withTracking) {
-
+        SetMyCurrentLocationData();
         NetworkManager.builder()
                 .setUrl(FriendsMap.BaseUrl + "/api/user/GetUserMapData/{friendId}/{withTracking}")
                 .addPathParameter("friendId", String.valueOf(userId))
@@ -157,7 +183,7 @@ public class MapFragment extends Fragment {
                             final Handler handler = new Handler();
                             handler.postDelayed(() -> {
                                 StatusTxt.setVisibility(View.INVISIBLE);
-                            }, 3000);
+                            }, 5000);
 
                         }
                     }
@@ -170,8 +196,30 @@ public class MapFragment extends Fragment {
                 });
     }
 
+    private void SetMyCurrentLocationData() {
+        SharedPreferences sharedPreferences = FriendsMap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE);
+        String lat = sharedPreferences.getString("UserLocLat", null);
+        String lon = sharedPreferences.getString("UserLocLon", null);
+        String speed = sharedPreferences.getString("UserSpeed", null);
+
+
+        GPSTracker gps = new GPSTracker(FriendsMap.getContext());
+        if (gps.getLatitude() != 0) {
+            lat = String.valueOf(gps.getLatitude());
+            lon = String.valueOf(gps.getLongitude());
+            speed = String.valueOf(gps.getSpeed());
+        }
+        try {
+            String data = FriendsMap.User.getUserId() + ",,," + lat + ",,," + lon + ",,," + speed;
+            String dataEnc = CryptoHelper.encrypt(data);
+            FirebaseService.SendUserLocation(dataEnc.replace("\n", ""), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void ShowMsg(String target) {
-        StatusTxt.setText("در حال پیدا کردن ");
+        StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
         GetUserLocation(Integer.parseInt(target), false);
     }
 

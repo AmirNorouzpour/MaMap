@@ -11,6 +11,8 @@ public class FriendMap implements Serializable {
     private double latitude;
     @SerializedName("Longitude")
     private double longitude;
+    @SerializedName("Speed")
+    private double speed;
     @SerializedName("Seen")
     private String seen;
     private FriendRequestStatus Status;
@@ -19,6 +21,20 @@ public class FriendMap implements Serializable {
     private int userId;
     @SerializedName("FileName")
     private String fileName;
+    @SerializedName("NotAvailable")
+    private boolean notAvailable;
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public boolean isNotAvailable() {
+        return notAvailable;
+    }
+
+    public void setNotAvailable(boolean notAvailable) {
+        this.notAvailable = notAvailable;
+    }
 
     public String getFileName() {
         return fileName;

@@ -69,23 +69,27 @@ public class CustomAdapter extends BaseAdapter {
         txtItemLoc.setTypeface(baseFont);
         txtItemName.setTypeface(baseFont);
         TextView txtItemMessage = view.findViewById(R.id.txt_message);
-
+        String distanceText;
         if (currentItem.getStatus() == FriendRequestStatus.Accepted) {
-            String distance = GetDistanceOfTwoLocations(currentItem);
-            txtItemLoc.setText(distance);
+            if (!currentItem.isNotAvailable())
+                distanceText = GetDistanceOfTwoLocations(currentItem);
+            else
+                distanceText = "خارج از دسترس";
+            txtItemLoc.setText(distanceText);
         } else {
             txtItemLoc.setText("منتظر پذیرش");
             txtItemLoc.setBackgroundColor(mContext.getResources().getColor(android.R.color.white));
         }
         txtItemName.setText(currentItem.getNickName());
-
-        Date mDate = GeneralUtils.StringToDate(currentItem.getSeen(), "yyyy-MM-dd'T'HH:mm:ss");
-        //String date = ShamsiDateUtil.getShmasiString(mDate);
-        Date currentTime = Calendar.getInstance().getTime();
-        view.setTag(currentItem);
-        String date = GeneralUtils.ComparativeDate(currentTime, mDate);
-        txtItemMessage.setText(date);
-        txtItemMessage.setTypeface(baseFont);
+        if (!currentItem.isNotAvailable()) {
+            Date mDate = GeneralUtils.StringToDate(currentItem.getSeen(), "yyyy-MM-dd'T'HH:mm:ss");
+            //String date = ShamsiDateUtil.getShmasiString(mDate);
+            Date currentTime = Calendar.getInstance().getTime();
+            view.setTag(currentItem);
+            String date = GeneralUtils.ComparativeDate(currentTime, mDate);
+            txtItemMessage.setText(date);
+            txtItemMessage.setTypeface(baseFont);
+        }
 
 
         RequestOptions options = new RequestOptions()

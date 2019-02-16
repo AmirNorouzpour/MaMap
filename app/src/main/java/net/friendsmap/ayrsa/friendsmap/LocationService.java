@@ -82,7 +82,7 @@ public class LocationService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                FirebaseService.SendUserLocation(dataEnc.replace("\n", ""));
+                FirebaseService.SendUserLocation(dataEnc.replace("\n", ""),true);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserLocLat", String.valueOf(location.getLatitude()));
                 editor.putString("UserLocLon", String.valueOf(location.getLongitude()));

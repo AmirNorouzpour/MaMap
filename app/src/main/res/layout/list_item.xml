@@ -38,7 +38,7 @@
                 android:textColor="@color/colorText"
                 android:gravity="right|bottom"
                 android:paddingRight="5dp"
-                android:text="Name" />
+                android:text="" />
 
 
         </LinearLayout>
@@ -52,7 +52,7 @@
             android:fontFamily="@fonts/iran_san"
             android:gravity="right"
             android:paddingRight="5dp"
-            android:text="Message"
+            android:text=""
             android:textColor="@color/colorText2" />
 
     </LinearLayout>
@@ -72,6 +72,6 @@
             android:fontFamily="@fonts/iran_san"
             android:textSize="11dp"
             android:gravity="center"
-            android:text="Location" />
+            android:text="" />
     </LinearLayout>
 </LinearLayout>

@@ -39,6 +39,10 @@ public class ClientDataNonGeneric {
         return EntityId;
     }
 
+    public void setEntityId(int entityId) {
+        EntityId = entityId;
+    }
+
     public OutType getOutType() {
         return Type;
     }

@@ -72,7 +72,7 @@ public class FirebaseService extends FirebaseMessagingService {
             JSONObject object = new JSONObject(params);
             if (object.has("title")) {
                 try {
-                    sendNotification(object.getString("title"),object.getString("body"));
+                    sendNotification(object.getString("title"), object.getString("body"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -101,7 +101,7 @@ public class FirebaseService extends FirebaseMessagingService {
                     try {
                         String data = tag + ",,," + lat + ",,," + lon + ",,," + speed;
                         String dataEnc = CryptoHelper.encrypt(data);
-                        SendUserLocation(dataEnc.replace("\n", ""));
+                        SendUserLocation(dataEnc.replace("\n", ""), false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -146,9 +146,10 @@ public class FirebaseService extends FirebaseMessagingService {
     }
 
 
-    public static void SendUserLocation(String data) {
+    public static void SendUserLocation(String data, boolean onlyUpdateMyLocation) {
         ClientDataNonGeneric cdata = new ClientDataNonGeneric();
         cdata.setTag(data);
+        cdata.setEntityId(onlyUpdateMyLocation ? 0 : 1);
         NetworkManager.builder()
                 .setUrl(FriendsMap.BaseUrl + "/api/user/SetUserMapData")
                 .addApplicationJsonBody(cdata)
