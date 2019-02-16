@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
                 }, new INetwork<ClientData<Version>>() {
                     @Override
                     public void onResponse(ClientData<Version> response) {
-                        GeneralUtils.hideLoading(loadingIndicatorView);
                         if (response.getOutType() == OutType.Success) {
                             if (response.getEntity() != null) {
                                 Version version = response.getEntity();

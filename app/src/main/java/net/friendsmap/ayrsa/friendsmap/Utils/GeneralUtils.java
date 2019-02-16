@@ -1,27 +1,38 @@
 package net.friendsmap.ayrsa.friendsmap.Utils;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import com.google.gson.Gson;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import net.friendsmap.ayrsa.friendsmap.BuildConfig;
+import net.friendsmap.ayrsa.friendsmap.MainActivity;
+import net.friendsmap.ayrsa.friendsmap.Models.Constants;
 import net.friendsmap.ayrsa.friendsmap.Models.OutType;
 import net.friendsmap.ayrsa.friendsmap.Models.SimpleNumber;
 import net.friendsmap.ayrsa.friendsmap.Models.Token;
+import net.friendsmap.ayrsa.friendsmap.Models.Version;
 import net.friendsmap.ayrsa.friendsmap.R;
 
 import java.net.InetAddress;
@@ -34,6 +45,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import ir.oxima.dialogbuilder.DialogBuilder;
 
 import static android.content.Context.MODE_PRIVATE;
 import static net.friendsmap.ayrsa.friendsmap.FriendsMap.getContext;
@@ -89,7 +102,7 @@ public class GeneralUtils {
         if (type == OutType.Success)
             style = R.style.success;
 
-       StyleableToast.makeText(getContext(), text, length, style).show();
+        StyleableToast.makeText(getContext(), text, length, style).show();
 
     }
 
@@ -260,6 +273,42 @@ public class GeneralUtils {
         return null;
     }
 
+    public static void startPowerSaverIntent(Context context) {
+        SharedPreferences settings = context.getSharedPreferences("ProtectedApps", Context.MODE_PRIVATE);
+        boolean skipMessage = settings.getBoolean("skipProtectedAppCheck", false);
+        if (!skipMessage) {
+            SharedPreferences.Editor editor = settings.edit();
+            boolean foundCorrectIntent = false;
+            for (Intent intent : Constants.POWERMANAGER_INTENTS) {
+                if (isCallable(context, intent)) {
+                    foundCorrectIntent = true;
+
+                    DialogBuilder dialogBuilder = new DialogBuilder(context).asAlertDialog(false);
+                    dialogBuilder.setMessage(" مامپ جهت ارائه عملکرد صحیح بر روی دستگاه شما نیازمند دسترسی Auto Start می باشد لطفا در تنظیمات گوشی خود این دسترسی را برای مامپ فراهم کنید.");
+                    dialogBuilder.setTitle(Build.MANUFACTURER.toUpperCase() + " Auto Start");
+                    dialogBuilder.setPositiveButton("اعمال دسترسی", dialog -> {
+                        context.startActivity(intent);
+                        dialog.dismiss();
+                        editor.putBoolean("skipProtectedAppCheck", true);
+                        editor.apply();
+                    });
+                    dialogBuilder.setNegativeButton("بعدا", dialog -> dialog.dismiss());
+                    dialogBuilder.show();
+                    break;
+                }
+            }
+            if (!foundCorrectIntent) {
+                editor.putBoolean("skipProtectedAppCheck", true);
+                editor.apply();
+            }
+        }
+    }
+
+    private static boolean isCallable(Context context, Intent intent) {
+        List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent,
+                PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
 
 }
 

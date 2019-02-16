@@ -1,5 +1,6 @@
 package net.friendsmap.ayrsa.friendsmap;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,6 +62,7 @@ public class SupportActivity extends AppCompatActivity {
         ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<>(SupportActivity.this, R.layout.ax_spinner_item, data);
         mySpinner.setAdapter(categoriesAdapter);
         avLoadingIndicatorView = findViewById(R.id.avi);
+        mySpinner.setDropDownViewResource(R.layout.ax_spinner_item);
         mySpinner.setOnSpinnerItemClickListener((position, itemAtPosition) -> {
             type = position + 1;
         });

@@ -4,12 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -90,7 +92,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         if (!isMyServiceRunning(mSensorService.getClass())) {
             startService(mServiceIntent);
         }
-
+        GeneralUtils.startPowerSaverIntent(MenuActivity.this);
     }
 
     public void GetUserAccount() {
