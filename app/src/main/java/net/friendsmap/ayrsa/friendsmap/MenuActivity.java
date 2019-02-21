@@ -15,6 +15,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -178,6 +179,22 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         });
     }
 
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            exit();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        GeneralUtils.showToast("برای خروج از برنامه دوباره برگشت را فشار دهید", Toast.LENGTH_SHORT, OutType.Warning);
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+    }
+
+
     private void CheckPermissions() {
         Dexter.withActivity(MenuActivity.this)
                 .withPermissions(
@@ -246,8 +263,10 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void exit() {
-        finish();
-        System.exit(0);
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     protected static final int REQUEST_CHECK_SETTINGS = 1000;

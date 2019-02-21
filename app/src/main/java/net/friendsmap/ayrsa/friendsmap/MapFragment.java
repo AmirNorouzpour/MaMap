@@ -75,10 +75,11 @@ public class MapFragment extends Fragment {
 
     private Location _location;
     private MaptexMap maptexMap;
+    private View _view;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        _view = view;
         FloatingActionButton fab = view.findViewById(R.id.FindMe);
         fab.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
@@ -147,19 +148,22 @@ public class MapFragment extends Fragment {
 
     private boolean showUser(MaptexMarker marker) {
 
+        UserView myView = new UserView(getContext());
+
+
         Date mDate = GeneralUtils.StringToDate(_friendMap.getSeen(), "yyyy-MM-dd'T'HH:mm:ss");
         //String date = ShamsiDateUtil.getShmasiString(mDate);
         Date currentTime = Calendar.getInstance().getTime();
         String date = GeneralUtils.ComparativeDate(currentTime, mDate);
 
         DialogBuilder dialogBuilder = new DialogBuilder(getActivity()).asBottomSheetDialog(true);
-        dialogBuilder.setTitle(_friendMap.getNickName());
+//        dialogBuilder.setTitle(_friendMap.getNickName());
         int speed = (int) ((_friendMap.getSpeed() * 3600) / 1000);
-        dialogBuilder.setMessage(_friendMap.getNickName() + " با سرعت " + speed + " KM/H " + date + " در مختصات مشخص شده بوده است");
+//        dialogBuilder.setMessage(_friendMap.getNickName() + " با سرعت " + speed + " KM/H " + date + " در مختصات مشخص شده بوده است");
         dialogBuilder.setPositiveButton("بروزرسانی", dialog -> {
         });
         dialogBuilder.setNegativeButton("بستن", dialog -> dialog.dismiss());
-
+        dialogBuilder.setCustomView(myView);
         dialogBuilder.show();
         GeneralUtils.showToast(marker.getPosition().latitude + " " + marker.getPosition().longitude, Toast.LENGTH_LONG, OutType.Success);
         return true;

@@ -31,13 +31,13 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="@drawable/shadow"/>
+        android:background="@drawable/shadow" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="58dp"
         android:layout_height="match_parent"
+        android:layout_marginTop="58dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -47,11 +47,21 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-               android:layout_height="70dp"
+                android:layout_height="70dp"
+                android:background="@color/colorWhite"
                 android:layoutDirection="rtl"
                 android:orientation="horizontal"
-                android:background="@color/colorWhite"
                 android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:fontFamily="@font/iran_sani"
+                    android:gravity="right|center"
+                    android:paddingRight="5dp"
+                    android:text="در دسترس بودن "
+                    android:textColor="@color/colorText" />
 
 
                 <Switch
@@ -61,35 +71,37 @@
                     android:layout_gravity="center"
                     android:checked="true"
                     android:fontFamily="@font/iran_sani"
-                    android:textColor="@color/colorText"
-                    android:text="در دسترس بودن  " />
+                    android:textColor="@color/colorText" />
 
 
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-           android:layout_height="70dp"
+            android:layout_height="70dp"
             android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWhite"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                android:background="@color/colorWhite"
-                android:layout_weight="0.5"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
                 android:padding="10dp"
-                android:orientation="horizontal">
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/txt_BuyAccount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="7"
+                    android:layout_weight="9.3"
                     android:fontFamily="@font/iran_sani"
                     android:gravity="right|center"
                     android:paddingRight="5dp"
@@ -97,25 +109,35 @@
                     android:textColor="@color/colorText" />
 
 
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:fontFamily="@font/iran_sani"
+                    android:gravity="right|center"
+                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-           android:layout_height="70dp"
+            android:layout_height="70dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/ExitFromAccount"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWhite"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                android:background="@color/colorWhite"
-                android:layout_weight="0.5"
-                android:padding="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/txt_ExitAccount"
@@ -132,28 +154,31 @@
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-           android:layout_height="70dp"
+            android:layout_height="70dp"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/SupportLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWhite"
                 android:clickable="true"
                 android:focusable="true"
-                android:id="@+id/SupportLayout"
                 android:foreground="?attr/selectableItemBackground"
-                android:background="@color/colorWhite"
-                android:layout_weight="0.5"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
                 android:padding="10dp"
-                android:orientation="horizontal">
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/txt_Support"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="7"
+                    android:layout_weight="9.3"
                     android:fontFamily="@font/iran_sani"
                     android:gravity="right|center"
                     android:paddingRight="5dp"
@@ -161,64 +186,87 @@
                     android:textColor="@color/colorText" />
 
 
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:fontFamily="@font/iran_sani"
+                    android:gravity="right|center"
+                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-           android:layout_height="70dp"
+            android:layout_height="70dp"
             android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/Rules"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWhite"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                android:background="@color/colorWhite"
-                android:layout_weight="0.5"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
                 android:padding="10dp"
-                android:id="@+id/Rules"
-                android:orientation="horizontal">
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/txt_Rules"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="7"
+                    android:layout_weight="9.3"
                     android:fontFamily="@font/iran_sani"
                     android:gravity="right|center"
                     android:paddingRight="5dp"
                     android:text="قوانین و شرایط استفاده"
                     android:textColor="@color/colorText" />
 
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:fontFamily="@font/iran_sani"
+                    android:gravity="right|center"
+                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
 
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-           android:layout_height="70dp"
+            android:layout_height="70dp"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/AboutUsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWhite"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                android:background="@color/colorWhite"
-                android:id="@+id/AboutUsLayout"
-                android:layout_weight="0.5"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
                 android:padding="10dp"
-                android:orientation="horizontal">
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/txt_AboutUs"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="7"
+                    android:layout_weight="9.3"
                     android:fontFamily="@font/iran_sani"
                     android:gravity="right|center"
                     android:paddingRight="5dp"
@@ -226,10 +274,18 @@
                     android:textColor="@color/colorText" />
 
 
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:fontFamily="@font/iran_sani"
+                    android:gravity="right|center"
+                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+
             </LinearLayout>
 
         </LinearLayout>
-
 
 
     </LinearLayout>
@@ -239,8 +295,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:indicatorColor="@color/colorText2"
         android:visibility="gone"
+        app:indicatorColor="@color/colorText2"
         app:indicatorName="BallPulseIndicator" />
 
 

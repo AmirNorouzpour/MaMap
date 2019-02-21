@@ -73,7 +73,7 @@ public class LocationService extends Service {
 
             String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + location.getSpeed();
             GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
-            if (distance > 100) {
+            if (distance > 100 || distance == 51) {
 
 
                 String dataEnc = null;
@@ -82,7 +82,7 @@ public class LocationService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                FirebaseService.SendUserLocation(dataEnc.replace("\n", ""),true);
+                FirebaseService.SendUserLocation(dataEnc.replace("\n", ""), true);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserLocLat", String.valueOf(location.getLatitude()));
                 editor.putString("UserLocLon", String.valueOf(location.getLongitude()));
