@@ -34,7 +34,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="@dimen/_200sdp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -54,12 +54,12 @@
             android:id="@+id/MobileNumberTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint="شماره تلفن همراه"
             android:inputType="phone"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -67,12 +67,12 @@
             android:id="@+id/PasswordTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint="رمز عبور"
             android:inputType="textPassword"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColorHint="@color/colorText2"
             android:textColor="@color/colorText"
             />
@@ -83,9 +83,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
             android:textColor="@color/colorWhite"
             android:background="@drawable/button_background"
             android:text="ورود"  />
@@ -94,7 +94,7 @@
             android:id="@+id/RememberMeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorAccent"
             android:text="رمز عبور خود را فراموش کرده اید؟"
             android:visibility="visible" />
@@ -120,6 +120,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:fontFamily="@font/iran_sani"
                 android:text="با ورود به دوستان من با قوانین و شرایط استفاده سامانه موافقت کردید" />
         </LinearLayout>
 

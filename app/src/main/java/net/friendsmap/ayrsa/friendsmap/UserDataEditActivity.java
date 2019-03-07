@@ -83,6 +83,7 @@ public class UserDataEditActivity extends AppCompatActivity {
         if (value == null || value.length() == 0) {
             String title = data.getTitle();
             GeneralUtils.showToast("لظفا مقدار " + title + " را وراد کنید", Toast.LENGTH_SHORT, OutType.Error);
+            SaveBtn.setVisibility(View.VISIBLE);
             return;
         }
         userDataMenu.setValue(value);
@@ -101,9 +102,6 @@ public class UserDataEditActivity extends AppCompatActivity {
                         GeneralUtils.hideLoading(loadingIndicatorView);
                         if (data.getOutType() == OutType.Success)
                         {
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("result",10);
-                            setResult(Activity.RESULT_OK,returnIntent);
                             finish();
                         }
                     }

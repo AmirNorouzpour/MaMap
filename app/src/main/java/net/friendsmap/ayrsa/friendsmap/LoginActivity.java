@@ -67,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         RememberMeTxt.setTypeface(baseFont);
         Password.setTypeface(baseFont);
         title.setTypeface(baseFont);
-        title.setTextSize(22);
         RememberMeTxt.setOnClickListener(v ->
         {
             Intent intent = new Intent(LoginActivity.this, OnEnterActivity.class);

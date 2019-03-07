@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/_28sdp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -24,7 +24,7 @@
             android:gravity="center"
             android:textColor="@color/colorWhite"
             android:id="@+id/OTPTxt"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:text="کد اعتبارسنجی" />
     </LinearLayout>
 
@@ -45,7 +45,7 @@
 
             <EditText
                 android:id="@+id/EditText1"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/_40sdp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -56,7 +56,7 @@
 
             <EditText
                 android:id="@+id/EditText2"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/_40sdp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -67,7 +67,7 @@
 
             <EditText
                 android:id="@+id/EditText3"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/_40sdp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -78,7 +78,7 @@
 
             <EditText
                 android:id="@+id/EditText4"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/_40sdp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -95,7 +95,7 @@
             android:id="@+id/RemianTimeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:paddingTop="@dimen/_8sdp"
             android:text=""
             android:visibility="visible" />
 
@@ -104,9 +104,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/_40sdp"
+            android:layout_marginRight="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:textColor="@color/colorWhite"
             android:background="@drawable/button_background"
             android:text="ثبت" />
@@ -127,7 +127,7 @@
             android:id="@+id/SendCodeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:text="" />
 
         <com.wang.avi.AVLoadingIndicatorView

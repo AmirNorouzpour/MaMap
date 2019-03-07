@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/_28sdp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:text="کد اعتبارسنجی"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
@@ -63,12 +63,12 @@
             android:id="@+id/MobileNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint="شماره تلفن همراه"
             android:inputType="phone"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -77,7 +77,7 @@
             android:id="@+id/RemianTimeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:text=""
             android:visibility="gone" />
 
@@ -97,9 +97,9 @@
             android:id="@+id/SendCodeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:background="@drawable/button_background"
             android:text="ثبت"
             android:textColor="@color/colorWhite" />

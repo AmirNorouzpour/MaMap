@@ -64,6 +64,7 @@ public class RulesActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             WebView webView = findViewById(R.id.webView);
+                            webView.clearCache(true);
                             webView.getSettings();
                             webView.setBackgroundColor(Color.TRANSPARENT);
                             webView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);

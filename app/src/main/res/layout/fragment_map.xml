@@ -19,34 +19,54 @@
         android:id="@+id/FindMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:backgroundTint="@color/colorAccent"
+        android:layout_gravity="bottom|end"
+        android:backgroundTint="@color/colorLightGray"
+        android:tint="@color/colorText"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_my_location_white_24dp" />
+        app:borderWidth="0dp"
+        android:src="@drawable/ic_my_location_white_24dp"
+        android:tooltipText="مرا بیاب" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/FindFriend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:backgroundTint="@color/colorAccent"
-        android:layout_marginRight="80dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_refresh"
-        android:tooltipText="Ali" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="80dp"
+        android:layoutDirection="rtl"
+        android:background="@drawable/red_border"
+        android:orientation="horizontal"
+        android:layout_gravity="end|bottom">
 
-    <TextView
-        android:id="@+id/StatusTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:text="" />
 
-    <net.friendsmap.ayrsa.friendsmap.UserView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:id="@+id/userView"
-        />
+        android:layout_margin="3dp"
+        android:layoutDirection="rtl"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/StatusTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:text="" />
+    </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <!--<net.friendsmap.ayrsa.friendsmap.UserView-->
+        <!--android:id="@+id/userView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="invisible" />-->
 
 </FrameLayout>

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -82,26 +83,31 @@ public class FirebaseService extends FirebaseMessagingService {
                 //String title = object.getString("title");
                 // sendNotification(title);
                 int catId = object.getInt("CatId");
+                int trId = 0;
                 int tag = 0;
                 if (object.has("Tag"))
                     tag = object.getInt("Tag");
+                if (object.has("TRId"))
+                    trId = object.getInt("TRId");
                 if (catId == 1) {
                     SharedPreferences sharedPreferences = FriendsMap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE);
                     String lat = sharedPreferences.getString("UserLocLat", null);
                     String lon = sharedPreferences.getString("UserLocLon", null);
                     String speed = sharedPreferences.getString("UserSpeed", null);
 
-
                     GPSTracker gps = new GPSTracker(FriendsMap.getContext());
+                    if (!gps.isGPSEnabled && gps.isNetworkEnabled)
+                        SystemClock.sleep(5000);
                     if (gps.getLatitude() != 0) {
                         lat = String.valueOf(gps.getLatitude());
                         lon = String.valueOf(gps.getLongitude());
                         speed = String.valueOf(gps.getSpeed());
                     }
+                    gps.stopUsingGPS();
                     try {
-                        String data = tag + ",,," + lat + ",,," + lon + ",,," + speed;
+                        String data = tag + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
                         String dataEnc = CryptoHelper.encrypt(data);
-                        SendUserLocation(dataEnc.replace("\n", ""), false);
+                        SendUserLocation(dataEnc.replace("\n", ""));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -146,12 +152,11 @@ public class FirebaseService extends FirebaseMessagingService {
     }
 
 
-    public static void SendUserLocation(String data, boolean onlyUpdateMyLocation) {
+    private void SendUserLocation(String data) {
         ClientDataNonGeneric cdata = new ClientDataNonGeneric();
         cdata.setTag(data);
-        cdata.setEntityId(onlyUpdateMyLocation ? 0 : 1);
         NetworkManager.builder()
-                .setUrl(FriendsMap.BaseUrl + "/api/user/SetUserMapData")
+                .setUrl(FriendsMap.BaseUrl + "/api/Tracking/SetUserMapData")
                 .addApplicationJsonBody(cdata)
                 .post(new TypeToken<ClientData<BaseResponse>>() {
                 }, new INetwork<ClientData<BaseResponse>>() {

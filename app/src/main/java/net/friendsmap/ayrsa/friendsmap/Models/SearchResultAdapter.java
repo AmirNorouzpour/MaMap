@@ -1,9 +1,6 @@
 package net.friendsmap.ayrsa.friendsmap.Models;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +24,6 @@ import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class SearchResultAdapter extends BaseAdapter {
 

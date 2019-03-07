@@ -73,7 +73,6 @@ public class MsgListAdapter extends BaseAdapter {
         textViewBody.setTypeface(baseFont);
         btnOk.setTypeface(baseFont);
         btnCancel.setTypeface(baseFont);
-        dateTxt.setTextSize(10);
         view.setTag(currentItem);
         titleTxt.setText(currentItem.getTitle());
         textViewBody.setText(currentItem.getBody());
@@ -89,6 +88,10 @@ public class MsgListAdapter extends BaseAdapter {
             if (eDate.before(currentTime) || currentItem.getHideButtons()) {
                 HideButtons();
             }
+        }
+
+        if (currentItem.getTag() == 0) {
+            HideButtons();
         }
 
         btnOk.setOnClickListener(v -> {

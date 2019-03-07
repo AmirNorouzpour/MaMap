@@ -12,18 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorAccent"
-        app:theme="@style/ToolbarTheme" >
+        app:theme="@style/ToolbarTheme">
 
         <TextView
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:fontFamily="@font/iran_sani"
-            android:textColor="@color/colorWhite"
-            android:textSize="14sp"
-            android:text="جستجوی کاربران"
             android:layout_marginRight="20sp"
-            android:id="@+id/toolbar_title" />
+            android:fontFamily="@font/iran_sani"
+            android:text="جستجوی کاربران"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -46,18 +46,18 @@
             android:padding="10dp"
             android:text="@string/addUserText"
             android:textColor="@color/colorText"
-            android:textSize="13sp" />
+            android:textSize="@dimen/_12sdp" />
 
         <EditText
             android:id="@+id/ParamTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:layout_marginRight="@dimen/_12sdp"
             android:gravity="center"
             android:hint="شماره تلفن کاربر"
             android:inputType="phone"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -66,9 +66,8 @@
             android:id="@+id/SearchBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:layout_marginRight="@dimen/_12sdp"
             android:layout_weight="0"
             android:background="@drawable/button_background"
             android:text="جستجو"
@@ -84,16 +83,16 @@
 
         <ListView
             android:id="@+id/list_view"
-            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp" />
     </LinearLayout>
 
 
     <TextView
         android:id="@+id/NotFoundImg"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/red_border"
         android:fontFamily="fonts/iran_san.ttf"

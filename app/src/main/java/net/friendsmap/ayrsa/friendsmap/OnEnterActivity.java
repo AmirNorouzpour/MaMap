@@ -1,34 +1,19 @@
 package net.friendsmap.ayrsa.friendsmap;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.google.gson.reflect.TypeToken;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -53,9 +38,6 @@ public class OnEnterActivity extends AppCompatActivity {
         _oTPTxt = findViewById(R.id.OTPTxt);
         _ruleTxt = findViewById(R.id.ruleTxt);
         _helpTxt = findViewById(R.id.helpTxt);
-        _ruleTxt.setTextSize(13);
-        _oTPTxt.setTextSize(22);
-        _helpTxt.setTextSize(16);
         _sendCodeBtn = findViewById(R.id.SendCodeBtn);
         _mobileNumber = findViewById(R.id.MobileNumber);
         _layout = findViewById(R.id.backgroundLayout);

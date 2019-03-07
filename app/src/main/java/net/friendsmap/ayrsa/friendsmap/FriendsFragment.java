@@ -67,7 +67,6 @@ public class FriendsFragment extends Fragment {
 
         nickName.setTypeface(baseFont);
         MobileTxt.setTypeface(baseFont);
-        MobileTxt.setTextSize(15);
 
         mList.setOnItemLongClickListener((arg0, v, pos, id) -> {
             View msgView = v.findViewById(R.id.txt_message);

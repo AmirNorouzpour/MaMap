@@ -18,9 +18,17 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.androidnetworking.error.ANError;
+import com.google.gson.reflect.TypeToken;
+
+import net.friendsmap.ayrsa.friendsmap.Models.BaseResponse;
+import net.friendsmap.ayrsa.friendsmap.Models.ClientData;
+import net.friendsmap.ayrsa.friendsmap.Models.ClientDataNonGeneric;
 import net.friendsmap.ayrsa.friendsmap.Models.OutType;
 import net.friendsmap.ayrsa.friendsmap.Utils.CryptoHelper;
 import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
+import net.friendsmap.ayrsa.friendsmap.network.INetwork;
+import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -71,9 +79,9 @@ public class LocationService extends Service {
                 distance = preLocation.distanceTo(location);
             }
 
-            String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + location.getSpeed();
+            String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + location.getSpeed() + ",,,0";
             //GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
-            if (distance > 100 || distance == 51) {
+            if (distance > 500 || distance == 51) {
 
 
                 String dataEnc = null;
@@ -82,7 +90,7 @@ public class LocationService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                FirebaseService.SendUserLocation(dataEnc.replace("\n", ""), true);
+                SendMyLocation(dataEnc.replace("\n", ""));
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserLocLat", String.valueOf(location.getLatitude()));
                 editor.putString("UserLocLon", String.valueOf(location.getLongitude()));
@@ -98,6 +106,28 @@ public class LocationService extends Service {
 
         }
 
+
+        public void SendMyLocation(String data) {
+            ClientDataNonGeneric cdata = new ClientDataNonGeneric();
+            cdata.setTag(data);
+            NetworkManager.builder()
+                    .setUrl(FriendsMap.BaseUrl + "/api/Tracking/SetUserMapData")
+                    .addApplicationJsonBody(cdata)
+                    .post(new TypeToken<ClientData<BaseResponse>>() {
+                    }, new INetwork<ClientData<BaseResponse>>() {
+                        @Override
+                        public void onResponse(ClientData<BaseResponse> response) {
+                            if (response.getOutType() == OutType.Success) {
+                            }
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+
+                        }
+
+                    });
+        }
 
         @Override
         public void onProviderDisabled(String provider) {

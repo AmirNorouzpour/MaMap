@@ -94,9 +94,7 @@ public class ProfileFragment extends Fragment {
         versionTxt.setText(" مامَپ نسخه " + GeneralUtils.GetVersionName());
         nickName.setTypeface(baseFont);
         mobileTxt.setTypeface(baseFont);
-        mobileTxt.setTextSize(15);
         txtExpireDate.setTypeface(baseFont);
-        txtExpireDate.setTextSize(12);
 
         mList.setOnItemClickListener((adapterView, view1, i, l) -> {
             UserDataMenu tag = (UserDataMenu) view1.getTag();

@@ -2,14 +2,12 @@ package net.friendsmap.ayrsa.friendsmap;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -19,13 +17,13 @@ import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import net.friendsmap.ayrsa.friendsmap.Models.ClientDataNonGeneric;
-import net.friendsmap.ayrsa.friendsmap.Models.DeviceInformation;
 import net.friendsmap.ayrsa.friendsmap.Models.OutType;
 import net.friendsmap.ayrsa.friendsmap.Utils.CryptoHelper;
 import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
 import net.friendsmap.ayrsa.friendsmap.network.INetwork;
 import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
 
+import io.reactivex.schedulers.Schedulers;
 import ir.oxima.dialogbuilder.DialogBuilder;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -79,6 +77,8 @@ public class SettingsFragment extends Fragment {
         RulesLayout.setOnClickListener(v -> OpenActivity(1, RulesActivity.class));
         AboutUsLayout.setOnClickListener(v -> OpenActivity(2, RulesActivity.class));
         SupportLayout.setOnClickListener(v -> OpenActivity(0, SupportActivity.class));
+
+
         return view;
     }
 

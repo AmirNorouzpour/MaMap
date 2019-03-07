@@ -11,7 +11,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/_110sdp"
         android:background="@color/colorAccent"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
@@ -19,9 +19,8 @@
 
         <ImageView
             android:id="@+id/img_avatar"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/_70sdp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
             android:src="@drawable/ic_user" />
 
         <LinearLayout
@@ -41,8 +40,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="30"
+                    android:fontFamily="@font/iran_sani"
                     android:gravity="right|bottom"
-                    android:paddingRight="5dp"
+                    android:textSize="@dimen/_12sdp"
+                    android:paddingRight="@dimen/_4sdp"
                     android:text=""
                     android:textColor="@color/colorWhite" />
 
@@ -105,16 +106,17 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="0.5"
                 android:gravity="right"
-                android:orientation="vertical"
-                android:paddingRight="5dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/txt_Mobile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:paddingRight="5dp"
+                    android:fontFamily="@font/iran_sani"
+                    android:gravity="right|top"
+                    android:paddingRight="@dimen/_4sdp"
+                    android:textSize="@dimen/_11sdp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
@@ -126,9 +128,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="150dp"
-        android:background="@drawable/shadow"/>
+        android:layout_height="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_110sdp"
+        android:background="@drawable/shadow" />
 
     <!--<View-->
     <!--android:layout_width="fill_parent"-->
@@ -140,7 +142,7 @@
         android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp">
+        android:layout_marginTop="@dimen/_110sdp">
 
         <ListView
             android:id="@+id/list_view"
@@ -154,7 +156,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/_12sdp"
         android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_add_white_24dp" />
 

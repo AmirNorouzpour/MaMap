@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:fontFamily="@font/iran_sani"
-    android:padding="5dp"
+    android:padding="@dimen/_8sdp"
     android:singleLine="true"
     android:textAlignment="inherit" />

@@ -1,11 +1,13 @@
 package net.friendsmap.ayrsa.friendsmap;
 
 import android.Manifest;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,7 +20,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import net.friendsmap.ayrsa.friendsmap.Models.ClientData;
@@ -29,6 +36,12 @@ import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
 import net.friendsmap.ayrsa.friendsmap.network.INetwork;
 import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -40,8 +53,6 @@ import ir.map.sdk_map.wrapper.MaptexMarker;
 import ir.map.sdk_map.wrapper.MaptexMarkerOptions;
 import ir.map.sdk_map.wrapper.SupportMaptexFragment;
 import ir.oxima.dialogbuilder.DialogBuilder;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class MapFragment extends Fragment {
@@ -55,11 +66,7 @@ public class MapFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //just change the fragment_dashboard
-        //with the fragment you want to inflate
-        //like if the class is HomeFragment it should have R.layout.home_fragment
         View view = inflater.inflate(R.layout.fragment_map, null);
-        //if it is DashboardFragment it should have R.layout.fragment_dashboard
         if (getArguments() != null)
             _friendMap = (FriendMap) getArguments().getSerializable("FriendMap");
 //        else {
@@ -75,11 +82,9 @@ public class MapFragment extends Fragment {
 
     private Location _location;
     private MaptexMap maptexMap;
-    private View _view;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        _view = view;
         FloatingActionButton fab = view.findViewById(R.id.FindMe);
         fab.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
@@ -139,42 +144,84 @@ public class MapFragment extends Fragment {
                     //maptexMap.addCircle(new MaptexCircleOptions().center(userLoc).fillColor(Color.parseColor("#cce6ff")));
                     maptexMap.animateCamera(MaptexCameraUpdateFactory.newLatLngZoom(userLoc, FOCUSED_ZOOM_LEVEL));
                     if (isInit) {
+                        StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
+                        final Handler handler = new Handler();
+                        handler.postDelayed(() -> {
+                            SetText();
+                        }, 15000);
                         GetUserLocation(friendMap.getUserId(), true);
                     }
+
                 }
             }
         });
     }
 
+
     private boolean showUser(MaptexMarker marker) {
 
-        UserView myView = new UserView(getContext());
-
-
+        UserView myView = new UserView(getContext(),_friendMap);
+        int speed = (int) ((_friendMap.getSpeed() * 3600) / 1000);
         Date mDate = GeneralUtils.StringToDate(_friendMap.getSeen(), "yyyy-MM-dd'T'HH:mm:ss");
         //String date = ShamsiDateUtil.getShmasiString(mDate);
         Date currentTime = Calendar.getInstance().getTime();
         String date = GeneralUtils.ComparativeDate(currentTime, mDate);
 
+        myView.setDateText(date);
+        myView.setSpeedText(speed + " کیلومتر بر ساعت ");
+        myView.setDirectionText("شمال");
+        myView.setGeoDataText(_friendMap.getLatitude() + "  ,  " + _friendMap.getLongitude());
+
+        AndroidNetworking.get("https://map.ir/reverse?lat=" + _friendMap.getLatitude() + "&lon=" + _friendMap.getLongitude())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            String loc = response.getString("address_compact");
+                            myView.setLabelText(loc);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+
+                    }
+                });
+
+
         DialogBuilder dialogBuilder = new DialogBuilder(getActivity()).asBottomSheetDialog(true);
-//        dialogBuilder.setTitle(_friendMap.getNickName());
-        int speed = (int) ((_friendMap.getSpeed() * 3600) / 1000);
+        dialogBuilder.setCustomView(myView);
+        dialogBuilder.setMessage("جزئیات موقعیت کاربر");
+        dialogBuilder.setTitle(_friendMap.getNickName());
+
 //        dialogBuilder.setMessage(_friendMap.getNickName() + " با سرعت " + speed + " KM/H " + date + " در مختصات مشخص شده بوده است");
         dialogBuilder.setPositiveButton("بروزرسانی", dialog -> {
         });
         dialogBuilder.setNegativeButton("بستن", dialog -> dialog.dismiss());
-        dialogBuilder.setCustomView(myView);
+
         dialogBuilder.show();
         GeneralUtils.showToast(marker.getPosition().latitude + " " + marker.getPosition().longitude, Toast.LENGTH_LONG, OutType.Success);
         return true;
     }
 
     private void GetUserLocation(int userId, boolean withTracking) {
-        SetMyCurrentLocationData();
+        String gd = GenerateData();
+        String data = null;
+        try {
+            data = URLEncoder.encode(gd, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         NetworkManager.builder()
-                .setUrl(FriendsMap.BaseUrl + "/api/user/GetUserMapData/{friendId}/{withTracking}")
-                .addPathParameter("friendId", String.valueOf(userId))
-                .addPathParameter("withTracking", Boolean.toString(withTracking))
+                .setUrl(FriendsMap.BaseUrl + "/api/Tracking/GetUserMapData")
+                .addQueryParameter("friendId", String.valueOf(userId))
+                .addQueryParameter("withTracking", Boolean.toString(withTracking))
+                .addQueryParameter("data", data)
                 .get(new TypeToken<ClientData<FriendMap>>() {
                 }, new INetwork<ClientData<FriendMap>>() {
                     @Override
@@ -183,14 +230,15 @@ public class MapFragment extends Fragment {
                         if (response.getOutType() == OutType.Success && response.getEntity() != null) {
                             FriendMap friendMap = response.getEntity();
                             StatusTxt.setText("پیدا شد");
+                            _friendMap = friendMap;
+                            StatusTxt.setVisibility(View.VISIBLE);
                             UpdateFriendLocation(friendMap, false);
                             final Handler handler = new Handler();
-                            handler.postDelayed(() -> {
-                                StatusTxt.setVisibility(View.INVISIBLE);
-                            }, 5000);
+                            handler.postDelayed(() -> SetText(), 5000);
 
                         }
                     }
+
 
                     @Override
                     public void onError(ANError anError) {
@@ -200,30 +248,34 @@ public class MapFragment extends Fragment {
                 });
     }
 
-    private void SetMyCurrentLocationData() {
-        SharedPreferences sharedPreferences = FriendsMap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE);
-        String lat = sharedPreferences.getString("UserLocLat", null);
-        String lon = sharedPreferences.getString("UserLocLon", null);
-        String speed = sharedPreferences.getString("UserSpeed", null);
+    private void SetText() {
+        StatusTxt.setText("جزئیات بیشتر");
+        StatusTxt.setTextColor(Color.parseColor("#1769aa"));
+        StatusTxt.setOnClickListener(v -> GeneralUtils.showToast("جزئیات بیشتر :)", Toast.LENGTH_SHORT, OutType.Success));
+    }
 
-
+    private String GenerateData() {
         GPSTracker gps = new GPSTracker(FriendsMap.getContext());
+//        if (!gps.isGPSEnabled && gps.isNetworkEnabled)
+//            SystemClock.sleep(2000);
+        double lat = 0, lon = 0, speed = 0;
         if (gps.getLatitude() != 0) {
-            lat = String.valueOf(gps.getLatitude());
-            lon = String.valueOf(gps.getLongitude());
-            speed = String.valueOf(gps.getSpeed());
+            lat = gps.getLatitude();
+            lon = gps.getLongitude();
+            speed = gps.getSpeed();
         }
+        gps.stopUsingGPS();
         try {
-            String data = FriendsMap.User.getUserId() + ",,," + lat + ",,," + lon + ",,," + speed;
+            String data = "0,,," + lat + ",,," + lon + ",,," + speed + ",,,0";
             String dataEnc = CryptoHelper.encrypt(data);
-            FirebaseService.SendUserLocation(dataEnc.replace("\n", ""), true);
+            return dataEnc;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void ShowMsg(String target) {
-        StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
         GetUserLocation(Integer.parseInt(target), false);
     }
 

@@ -63,9 +63,7 @@ public class SupportActivity extends AppCompatActivity {
         mySpinner.setAdapter(categoriesAdapter);
         avLoadingIndicatorView = findViewById(R.id.avi);
         mySpinner.setDropDownViewResource(R.layout.ax_spinner_item);
-        mySpinner.setOnSpinnerItemClickListener((position, itemAtPosition) -> {
-            type = position + 1;
-        });
+        mySpinner.setOnSpinnerItemClickListener((position, itemAtPosition) -> type = position + 1);
         btn = findViewById(R.id.SaveCodeBtn);
         btn.setOnClickListener(v -> SendRequest());
     }

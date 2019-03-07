@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginRight="20sp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:fontFamily="@font/iran_sani"
             android:textColor="@color/colorWhite"
             android:textSize="14sp" />
@@ -32,7 +32,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="@dimen/_50sdp"
         android:gravity="center_horizontal"
 
         android:orientation="vertical"

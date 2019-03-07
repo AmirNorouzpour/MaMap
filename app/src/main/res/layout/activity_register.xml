@@ -33,13 +33,13 @@
             android:id="@+id/MobileNumberTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:enabled="false"
             android:gravity="center"
             android:hint="شماره تلفن همراه"
             android:inputType="phone"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -47,12 +47,12 @@
             android:id="@+id/UserNameTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint="نام کاربری"
             android:inputType="text"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -60,12 +60,12 @@
             android:id="@+id/PasswordTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint="رمز عبور"
             android:inputType="textPassword"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -73,12 +73,12 @@
             android:id="@+id/RePasswordTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint="تکرار رمز عبور"
             android:inputType="textPassword"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -86,10 +86,12 @@
             android:id="@+id/RegisterBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
             android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_12sdp"
+            android:fontFamily="@font/iran_sani"
             android:background="@drawable/button_background"
             android:text="ثبت" />
 
@@ -105,7 +107,8 @@
             android:id="@+id/IHaveMeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
+            android:fontFamily="@font/iran_sani"
             android:text="حساب کاربری دارید؟ وارد شوید."
             android:visibility="visible" />
 

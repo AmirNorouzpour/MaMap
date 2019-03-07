@@ -19,276 +19,274 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginRight="20sp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:fontFamily="@font/iran_sani"
             android:text="تنظیمات کاربری"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="@dimen/_10sdp" />
 
     </android.support.v7.widget.Toolbar>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:background="@drawable/shadow" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="58dp"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@color/colorWhite"
-                android:layoutDirection="rtl"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_height="@dimen/_55sdp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="7"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:paddingRight="5dp"
-                    android:text="در دسترس بودن "
-                    android:textColor="@color/colorText" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_55sdp"
+                    android:background="@color/colorWhite"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8sdp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="در دسترس بودن "
+                        android:textColor="@color/colorText" />
 
 
-                <Switch
-                    android:id="@+id/switchNotAvailable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:checked="true"
-                    android:fontFamily="@font/iran_sani"
-                    android:textColor="@color/colorText" />
+                    <Switch
+                        android:id="@+id/switchNotAvailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:checked="true"
+                        android:fontFamily="@font/iran_sani"
+                        android:textColor="@color/colorText" />
 
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="30dp"
-            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/colorWhite"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:layoutDirection="rtl"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="10">
+                android:layout_height="@dimen/_55sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_BuyAccount"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="9.3"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:paddingRight="5dp"
-                    android:text="حذف محدودیت ها و تبلیغات"
-                    android:textColor="@color/colorText" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorWhite"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8sdp"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/txt_BuyAccount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="9.3"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="حذف محدودیت ها و تبلیغات"
+                        android:textColor="@color/colorText" />
 
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.7"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
 
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ExitFromAccount"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/colorWhite"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_height="@dimen/_55sdp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_ExitAccount"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="7"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:paddingRight="5dp"
-                    android:text="خروج از حساب کاربری"
-                    android:textColor="@color/colorText" />
+                <LinearLayout
+                    android:id="@+id/ExitFromAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorWhite"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8sdp">
 
+                    <TextView
+                        android:id="@+id/txt_ExitAccount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="خروج از حساب کاربری"
+                        android:textColor="@color/colorText" />
+
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/SupportLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/colorWhite"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:layoutDirection="rtl"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="10">
+                android:layout_height="@dimen/_55sdp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_Support"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="9.3"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:paddingRight="5dp"
-                    android:text="پشتیبانی"
-                    android:textColor="@color/colorText" />
+                <LinearLayout
+                    android:id="@+id/SupportLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorWhite"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8sdp"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/txt_Support"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="9.3"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="پشتیبانی"
+                        android:textColor="@color/colorText" />
 
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.7"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
 
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="30dp"
-            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/Rules"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/colorWhite"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:layoutDirection="rtl"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="10">
+                android:layout_height="@dimen/_55sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_Rules"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="9.3"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:paddingRight="5dp"
-                    android:text="قوانین و شرایط استفاده"
-                    android:textColor="@color/colorText" />
+                <LinearLayout
+                    android:id="@+id/Rules"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorWhite"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8sdp"
+                    android:weightSum="10">
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+                    <TextView
+                        android:id="@+id/txt_Rules"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="9.3"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="قوانین و شرایط استفاده"
+                        android:textColor="@color/colorText" />
 
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.7"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/AboutUsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/colorWhite"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:layoutDirection="rtl"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="10">
+                android:layout_height="@dimen/_55sdp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_AboutUs"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="9.3"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:paddingRight="5dp"
-                    android:text="درباره ما"
-                    android:textColor="@color/colorText" />
+                <LinearLayout
+                    android:id="@+id/AboutUsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorWhite"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8sdp"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/txt_AboutUs"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="9.3"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="درباره ما"
+                        android:textColor="@color/colorText" />
 
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:fontFamily="@font/iran_sani"
-                    android:gravity="right|center"
-                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.7"
+                        android:fontFamily="@font/iran_sani"
+                        android:gravity="right|center"
+                        android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
 
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
-
-
-    </LinearLayout>
+    </ScrollView>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/avi"

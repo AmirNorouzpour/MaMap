@@ -20,19 +20,20 @@
             android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="right"
-            android:layout_margin="20sp"
             android:fontFamily="@font/iran_sani"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/_10sdp"
             android:text="ارتباط با ما"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="@dimen/_9sdp" />
 
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="15"
+        android:layout_weight="16"
+        android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/red_border"
         android:padding="10dp">
 
@@ -41,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/iran_sani"
-            android:paddingRight="5dp"
+            android:paddingRight="@dimen/_4sdp"
+            android:textSize="@dimen/_10sdp"
             android:text="@string/ContactUsDesc"
             android:textColor="@color/colorText" />
 
@@ -51,9 +53,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="80"
-        android:weightSum="100"
+        android:layout_weight="83"
+        android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/red_border"
         android:orientation="vertical"
         android:padding="10dp">
@@ -62,13 +63,13 @@
             android:id="@+id/EmailTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:fontFamily="@font/iran_sani"
             android:gravity="center"
             android:hint="ایمیل"
+            android:textSize="@dimen/_11sdp"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
@@ -78,11 +79,11 @@
             android:id="@+id/ReqType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="20"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:fontFamily="@font/iran_sani"
+            android:textSize="@dimen/_11sdp"
             app:spinnerDirection="rtl"
             app:spinnerHint="نوع درخواست" />
 
@@ -91,16 +92,16 @@
             android:id="@+id/Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:fontFamily="@font/iran_sani"
             android:gravity="right"
             android:hint="پیام"
+            android:textSize="@dimen/_11sdp"
             android:inputType="textMultiLine"
-            android:lines="5"
-            android:minLines="5"
-            android:layout_weight="40"
+            android:lines="4"
+            android:minLines="4"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -108,9 +109,7 @@
             android:id="@+id/SaveCodeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_margin="@dimen/_16sdp"
             android:fontFamily="@font/iran_sani"
             android:textColor="@color/colorWhite"
             android:background="@drawable/button_background"
@@ -126,6 +125,16 @@
             app:indicatorName="BallClipRotateMultipleIndicator"
             />
 
+
+        <TextView
+            android:id="@+id/FAQ"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/iran_sani"
+            android:textSize="@dimen/_12sdp"
+            android:text="سوالات متداول کاربران"
+            android:gravity="center|bottom"
+            android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
 

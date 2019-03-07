@@ -19,18 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import net.friendsmap.ayrsa.friendsmap.Models.ClientData;
 import net.friendsmap.ayrsa.friendsmap.Models.ClientDataNonGeneric;
 import net.friendsmap.ayrsa.friendsmap.Models.OutType;
-import net.friendsmap.ayrsa.friendsmap.Models.Token;
-import net.friendsmap.ayrsa.friendsmap.Models.User;
 import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
 import net.friendsmap.ayrsa.friendsmap.network.INetwork;
 import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
@@ -70,8 +64,6 @@ public class VerificationActivity extends AppCompatActivity {
         //   sendCodeAgainBtn.setTypeface(baseFont);
         okBtn.setTypeface(baseFont);
         OTPTxt.setTypeface(baseFont);
-        OTPTxt.setTextSize(22);
-        okBtn.setTextSize(14);
 
         String mobileNumber = getIntent().getStringExtra("MobileNumber");
         needVerification = getIntent().getIntExtra("NeedVerification", 0);

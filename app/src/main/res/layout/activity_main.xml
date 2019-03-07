@@ -18,61 +18,59 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25"
-            />
+            android:layout_weight="0.25" />
 
         <ImageView
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitXY"
-            android:src="@drawable/logo"
-            />
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/appName"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:fontFamily="@font/iran_sani"
             android:gravity="center"
             android:text="مامَپ"
             android:textColor="@color/colorAccent"
-            android:textSize="28sp" />
+            android:textSize="@dimen/_22sdp" />
+
         <View
-            android:layout_width="80dp"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_1sdp"
             android:layout_gravity="center"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
+            android:background="@color/colorAccent" />
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.07"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/iran_sani"
             android:gravity="center"
             android:text="سرویس به اشتراک گذاری موقعیت مکانی"
             android:textColor="@color/colorAccent"
-            android:textSize="14sp" />
+            android:textSize="@dimen/_10sdp" />
 
         <TextView
             android:id="@+id/versionTxt"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.05"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/iran_sani"
             android:gravity="center"
             android:textColor="@color/colorAccent"
-            android:textSize="11sp" />
+            android:textSize="@dimen/_8sdp" />
 
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
             android:layout_gravity="center"
             app:indicatorColor="@color/colorAccent"
             app:indicatorName="BallPulseIndicator" />

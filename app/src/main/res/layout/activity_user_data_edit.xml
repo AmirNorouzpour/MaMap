@@ -20,9 +20,9 @@
             android:layout_gravity="right"
             android:fontFamily="@font/iran_sani"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp"
+            android:textSize="@dimen/_12sdp"
             android:text="ویرایش مشخصات کاربر"
-            android:layout_marginRight="20sp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:id="@+id/toolbar_title" />
 
     </android.support.v7.widget.Toolbar>
@@ -33,9 +33,9 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="75dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_75sdp"
+        android:layout_marginRight="@dimen/_16sdp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -44,12 +44,12 @@
             android:id="@+id/ParamTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:gravity="center"
             android:hint=""
             android:inputType="text"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/_16sdp"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText2" />
 
@@ -58,9 +58,9 @@
             android:id="@+id/SaveBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:layout_weight="0"
             android:background="@drawable/button_background"
             android:text="ثبت"

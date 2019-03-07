@@ -2,6 +2,7 @@ package net.friendsmap.ayrsa.friendsmap.network;
 
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.gsonparserfactory.GsonParserFactory;
@@ -30,9 +31,13 @@ public class NetworkManager<T> {
     private String mTag;
     private Object mObject;
     private Map<String, String> parameterMap;
+    private Map<String, String> parameterQueryMap;
+    private boolean _value = false;
 
     private NetworkManager() {
         parameterMap = new HashMap<>();
+        parameterQueryMap = new HashMap<>();
+
     }
 
     public static NetworkManager builder() {
@@ -62,11 +67,21 @@ public class NetworkManager<T> {
         parameterMap.put(key, value);
         return this;
     }
+    public NetworkManager addQueryParameter(String key, String value) {
+        parameterQueryMap.put(key, value);
+        return this;
+    }
 
     public NetworkManager addBodyParameter(String key, String value) {
         parameterMap.put(key, value);
         return this;
     }
+
+    public NetworkManager isQueryVersion(boolean value) {
+        _value = value;
+        return this;
+    }
+
 
     public void post(final TypeToken type, final INetwork iNetwork) {
         if (!GeneralUtils.TokenIsValid(FriendsMap.getContext())) {
@@ -158,32 +173,34 @@ public class NetworkManager<T> {
             return;
         }
 
-        AndroidNetworking.get(mUrl)
-                .setPriority(Priority.MEDIUM)
+        ANRequest request = AndroidNetworking.get(mUrl)
+                .setPriority(Priority.MEDIUM).addPathParameter(parameterMap).addQueryParameter(parameterQueryMap)
                 .addHeaders("Authorization", TokenManager.builder().getToken())
-                .setTag(mTag).addPathParameter(parameterMap).build()
-                .getAsParsed(type, new ParsedRequestListener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        try {
-                            iNetwork.onResponse(response);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+                .setTag(mTag).build();
 
-                    @Override
-                    public void onError(ANError anError) {
-                        if (anError.getErrorCode() == 401) {
-                            Token token = new Token();
-                            token.expires_in = 0;
-                            GeneralUtils.writeToken(token, 0, FriendsMap.getContext());
-                            get(type, iNetwork);
-                            return;
-                        }
-                        iNetwork.onError(anError);
+
+            request.getAsParsed(type, new ParsedRequestListener() {
+                @Override
+                public void onResponse(Object response) {
+                    try {
+                        iNetwork.onResponse(response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+
+                @Override
+                public void onError(ANError anError) {
+                    if (anError.getErrorCode() == 401) {
+                        Token token = new Token();
+                        token.expires_in = 0;
+                        GeneralUtils.writeToken(token, 0, FriendsMap.getContext());
+                        get(type, iNetwork);
+                        return;
+                    }
+                    iNetwork.onError(anError);
+                }
+            });
 
 
     }

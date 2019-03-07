@@ -1,18 +1,14 @@
 package net.friendsmap.ayrsa.friendsmap;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,16 +19,12 @@ import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import net.friendsmap.ayrsa.friendsmap.Models.ClientData;
-import net.friendsmap.ayrsa.friendsmap.Models.CustomAdapter;
-import net.friendsmap.ayrsa.friendsmap.Models.FriendMap;
 import net.friendsmap.ayrsa.friendsmap.Models.OutType;
 import net.friendsmap.ayrsa.friendsmap.Models.SearchResultAdapter;
 import net.friendsmap.ayrsa.friendsmap.Models.User;
 import net.friendsmap.ayrsa.friendsmap.Utils.GeneralUtils;
 import net.friendsmap.ayrsa.friendsmap.network.INetwork;
 import net.friendsmap.ayrsa.friendsmap.network.NetworkManager;
-
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 

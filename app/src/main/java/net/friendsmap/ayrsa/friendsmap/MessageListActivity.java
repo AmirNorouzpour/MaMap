@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class MessageListActivity extends AppCompatActivity {
         DefaultBackgeroundDrawable defaultBackgeroundDrawable = new DefaultBackgeroundDrawable();
         defaultBackgeroundDrawable.setCircleColor(Color.parseColor("#12252525"));
         defaultBackgeroundDrawable.setBackgroundColor(Color.parseColor("#fafafa"));
-        ConstraintLayout layoutLaunch = findViewById(R.id.layout);
+        RelativeLayout layoutLaunch = findViewById(R.id.layout);
         layoutLaunch.setBackground(defaultBackgeroundDrawable);
 
         mToolbar.setNavigationOnClickListener(v -> {
