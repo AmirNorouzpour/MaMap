@@ -40,13 +40,14 @@
 
 
     <LinearLayout
+        android:id="@+id/UpdateLocation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="3dp"
         android:layoutDirection="rtl"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/ripple"
         android:orientation="horizontal"
         android:layout_gravity="center">
 
@@ -62,11 +63,5 @@
 
     </LinearLayout>
 
-
-    <!--<net.friendsmap.ayrsa.friendsmap.UserView-->
-        <!--android:id="@+id/userView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:visibility="invisible" />-->
 
 </FrameLayout>
