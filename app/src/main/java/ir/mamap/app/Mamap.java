@@ -2,7 +2,6 @@ package ir.mamap.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -49,6 +48,7 @@ public class Mamap extends Application {
                 .setActionFontPath("fonts/iran_san.ttf")
                 .setTitleFontPath("fonts/iran_san.ttf")
                 .setMessageFontPath("fonts/iran_san.ttf");
+
         Thread.setDefaultUncaughtExceptionHandler((thread, e) -> handleUncaughtException(thread, e));
     }
 
@@ -60,9 +60,6 @@ public class Mamap extends Application {
         e.printStackTrace(pw);
         String sStackTrace = sw.toString(); // stack trace as a string
 
-        Intent intent = new Intent(getBaseContext(), ExceptionActivity.class);
-        intent.putExtra("StackTrace", sStackTrace);
-        startActivity(intent);
 
         System.exit(1); // kill off the crashed app
     }
@@ -132,6 +129,8 @@ public class Mamap extends Application {
 
         return fullName;
     }
+
+
 }
 
 

@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+//        ApplicationCrashHandler.installHandler();
+
         DefaultBackgeroundDrawable defaultBackgeroundDrawable = new DefaultBackgeroundDrawable();
         defaultBackgeroundDrawable.setCircleColor(Color.parseColor("#12252525"));
         defaultBackgeroundDrawable.setBackgroundColor(Color.parseColor("#fafafa"));

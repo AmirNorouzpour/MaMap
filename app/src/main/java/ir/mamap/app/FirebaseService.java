@@ -92,7 +92,7 @@ public class FirebaseService extends FirebaseMessagingService {
                     String speed = sharedPreferences.getString("UserSpeed", null);
 
                     GPSTracker gps = new GPSTracker(Mamap.getContext());
-                    if (!gps.isGPSEnabled && gps.isNetworkEnabled)
+                    if ((!gps.isGPSEnabled && gps.isNetworkEnabled) || gps.getLatitude() == 0)
                         SystemClock.sleep(5000);
                     if (gps.getLatitude() != 0) {
                         lat = String.valueOf(gps.getLatitude());

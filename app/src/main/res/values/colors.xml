@@ -10,4 +10,7 @@
     <color name="colorRed">#F44336</color>
     <color name="colorLightYellow">#fffde7</color>
     <color name="colorSilver">#C0C0C0</color>
+    <color name="colorLightRed">#DDF5E0E0</color>
+    <color name="colorBack">#Fafafa</color>
+    <color name="colorGreen">#8BC34A</color>
 </resources>

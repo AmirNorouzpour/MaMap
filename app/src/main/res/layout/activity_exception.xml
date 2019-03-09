@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBack"
     tools:context=".ExceptionActivity">
+
 
     <LinearLayout
         android:id="@+id/linearLayoutInternetMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:gravity="center"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="@dimen/_96sdp"
+            android:layout_height="@dimen/_96sdp"
+            android:src="@drawable/ic_warning" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/iran_sani"
+            android:paddingLeft="@dimen/_40sdp"
+            android:paddingRight="@dimen/_40sdp"
+            android:text="متاسفانه خطایی پیش بینی نشده رخ داده است، سعی میکنیم در اسرع وقت مشکل را بر طرف کنیم."
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/_11sdp" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:gravity="center"
             android:layoutDirection="rtl">
 
@@ -25,19 +42,30 @@
                 android:id="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ثبت گزارش"></Button>
+                android:background="@drawable/button_background_green"
+                android:fontFamily="@font/iran_sani"
+                android:text="ثبت گزارش"
+                android:textColor="@color/md_white" />
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="تلاش مجدد"></Button>
+                android:layout_marginRight="@dimen/_5sdp"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/iran_sani"
+                android:text="بازگشت"
+                android:textColor="@color/md_white" />
 
             <Button
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="جزییات خطا"></Button>
+                android:layout_marginRight="@dimen/_5sdp"
+                android:background="@drawable/button_background_gray"
+                android:fontFamily="@font/iran_sani"
+                android:text="جزییات خطا"
+                android:textColor="@color/md_white" />
         </LinearLayout>
 
 
@@ -45,11 +73,12 @@
             android:id="@+id/SCROLLER_ID"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:fillViewport="true">
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fillViewport="true"
+            android:scrollbars="vertical">
 
             <TextView
-                android:id="@+id/StactTraceText"
+                android:id="@+id/StackTraceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
@@ -62,4 +91,4 @@
     </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

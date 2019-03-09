@@ -30,9 +30,11 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="b6b6b6" />
-                            <entry key="outputName" value="ic_navigation" />
+                            <entry key="height" value="512" />
+                            <entry key="outputName" value="ic_warning" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\Amir\Desktop\navigation.svg" />
+                            <entry key="sourceFile" value="C:\Users\Amir\Desktop\warning.svg" />
+                            <entry key="width" value="512" />
                           </map>
                         </option>
                       </PersistentState>

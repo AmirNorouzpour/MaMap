@@ -11,9 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tomergoldst.tooltips.ToolTip;
-import com.tomergoldst.tooltips.ToolTipsManager;
-
 import ir.mamap.app.Models.FriendMap;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -81,10 +78,10 @@ public class UserView extends LinearLayout {
         geoDataLabel.setText("موقعیت جغرافیایی");
         labelLabel.setText("مکان");
         LinearLayout root = findViewById(R.id.root);
-        ToolTip.Builder builder = new ToolTip.Builder(Mamap.getContext(), labelLabel, root, "شما می توانید برای مکان های روی نقشه نام انتخاب کنید", ToolTip.GRAVITY_CENTER);
-        ToolTipsManager mToolTipsManager = new ToolTipsManager();
-        labelLabel.setOnClickListener(v -> mToolTipsManager.show(builder.build()));
-        qIcon.setOnClickListener(v -> mToolTipsManager.show(builder.build()));
+//        ToolTip.Builder builder = new ToolTip.Builder(Mamap.getContext(), labelLabel, root, "شما می توانید برای مکان های روی نقشه نام انتخاب کنید", ToolTip.GRAVITY_CENTER);
+//        ToolTipsManager mToolTipsManager = new ToolTipsManager();
+//        labelLabel.setOnClickListener(v -> mToolTipsManager.show(builder.build()));
+//        qIcon.setOnClickListener(v -> mToolTipsManager.show(builder.build()));
         navigationIcon.setOnClickListener(v -> OpenInMap());
     }
 

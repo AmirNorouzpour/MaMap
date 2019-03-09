@@ -72,7 +72,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
+        int iii = 1 / 0;
         bottomNav = findViewById(R.id.bottom_nav);
         Typeface baseFont = Typeface.createFromAsset(MenuActivity.this.getAssets(), "fonts/iran_san.ttf");
         CustomTypefaceSpan typefaceSpan = new CustomTypefaceSpan("", baseFont);
