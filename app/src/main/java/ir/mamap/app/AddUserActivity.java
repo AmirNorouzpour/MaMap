@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class AddUserActivity extends AppCompatActivity {
         DefaultBackgeroundDrawable defaultBackgeroundDrawable = new DefaultBackgeroundDrawable();
         defaultBackgeroundDrawable.setCircleColor(Color.parseColor("#12252525"));
         defaultBackgeroundDrawable.setBackgroundColor(Color.parseColor("#fafafa"));
-        ConstraintLayout layoutLaunch = findViewById(R.id.layout);
+        LinearLayout layoutLaunch = findViewById(R.id.layout);
         layoutLaunch.setBackground(defaultBackgeroundDrawable);
 
         mToolbar.setNavigationOnClickListener(v -> {

@@ -13,4 +13,7 @@
     <color name="colorLightRed">#DDF5E0E0</color>
     <color name="colorBack">#Fafafa</color>
     <color name="colorGreen">#8BC34A</color>
+    <color name="colorLightGreen">#6EBD1C</color>
+    <color name="colorPurple">#7A55C0</color>
+    <color name="colorGreenBlue">#21AC9E</color>
 </resources>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
@@ -101,6 +102,11 @@ public class FirebaseService extends FirebaseMessagingService {
                     }
                     gps.stopUsingGPS();
                     try {
+                        int batLevel = 0;
+                        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+                        }
                         String data = tag + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
                         String dataEnc = CryptoHelper.encrypt(data);
                         SendUserLocation(dataEnc.replace("\n", ""));

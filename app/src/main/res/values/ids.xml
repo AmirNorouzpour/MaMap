@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="button_r_1" type="id" />
+    <item name="button_r_2" type="id" />
+    <item name="button_r_3" type="id" />
+    <item name="button_r_4" type="id" />
+    <item name="button_r_5" type="id" />
+    <item name="button_r_6" type="id" />
+    <item name="button_r_7" type="id" />
+    <item name="button_r_8" type="id" />
+    <item name="button_r_9" type="id" />
+</resources>

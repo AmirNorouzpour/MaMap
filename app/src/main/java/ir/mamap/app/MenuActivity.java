@@ -72,7 +72,6 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        int iii = 1 / 0;
         bottomNav = findViewById(R.id.bottom_nav);
         Typeface baseFont = Typeface.createFromAsset(MenuActivity.this.getAssets(), "fonts/iran_san.ttf");
         CustomTypefaceSpan typefaceSpan = new CustomTypefaceSpan("", baseFont);
@@ -92,6 +91,8 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
             startService(mServiceIntent);
         }
         GeneralUtils.startPowerSaverIntent(MenuActivity.this);
+
+      // FriendsFragment.showTapTarget(MenuActivity.this,bottomNav,"منو اصلی برنامه","منو اصلی برنامه جهت دسترسی به دوستان ، نقشه، تنظیمات و حساب کاربری");
     }
 
     public void GetUserAccount() {

@@ -1,6 +1,9 @@
 package ir.mamap.app;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -33,9 +39,12 @@ import ir.mamap.app.network.NetworkManager;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class FriendsFragment extends Fragment {
     ListView mList;
     ArrayList<FriendMap> arrayItem;
+    View _view;
 
     @Nullable
     @Override
@@ -150,8 +159,94 @@ public class FriendsFragment extends Fragment {
         GetUserFriends(menuActivity, loadingIndicatorView);
 
         menuActivity.GetUserPicture(img);
+        _view = view;
+        SharedPreferences sharedPreferences = Mamap.getContext().getSharedPreferences("UserGuide", MODE_PRIVATE);
+        if (!sharedPreferences.getBoolean("UserTapPassed", false))
+            new TapTargetSequence(getActivity())
+                    .targets(
+                            TapTarget.forView(view.findViewById(R.id.addFriendBtn), "اضافه کردن مخاطب", "شما برای مشاهده مخاطب روی نقشه ابتدا باید ایشان را به دوستان خود اضافه کنید")
+                                    .outerCircleColor(R.color.colorAccent)
+                                    .titleTextColor(R.color.colorWhite)
+                                    .descriptionTextColor(R.color.colorGreen)
+                                    .textColor(R.color.colorWhite)
+                                    .textTypeface(baseFont).titleTypeface(baseFont).descriptionTypeface(baseFont).descriptionTextSize(12)
+                                    .drawShadow(true)
+                                    .cancelable(false)
+                                    .transparentTarget(true)
+                                    .targetRadius(60),
+                            TapTarget.forView(view.findViewById(R.id.checkMsg), "پیام های شما", "پیام دریافتی شما و درخواست دوستان شما اینجا قابل مشاهده هستند")
+                                    .outerCircleColor(R.color.colorAccent)
+                                    .titleTextColor(R.color.colorWhite)
+                                    .descriptionTextColor(R.color.colorGreen)
+                                    .textColor(R.color.colorWhite)
+                                    .textTypeface(baseFont).titleTypeface(baseFont).descriptionTypeface(baseFont).descriptionTextSize(12)
+                                    .drawShadow(true)
+                                    .cancelable(false)
+//                                .tintTarget(true)
+                                    .transparentTarget(true)
+                                    .targetRadius(60),
+                            TapTarget.forView(view.findViewById(R.id.img_avatar), "خلاصه اطلاعات کاربری شما", "برای مشاهده جزئیات اطلاعات کاربری تصویر را لمس نمائید")
+                                    .outerCircleColor(R.color.colorAccent)
+                                    .titleTextColor(R.color.colorWhite)
+                                    .descriptionTextColor(R.color.colorGreen)
+                                    .textColor(R.color.colorWhite)
+                                    .textTypeface(baseFont).titleTypeface(baseFont).descriptionTypeface(baseFont).descriptionTextSize(12)
+                                    .drawShadow(true)
+                                    .cancelable(false)
+                                    .transparentTarget(true)
+                                    .targetRadius(60))
+                    .listener(new TapTargetSequence.Listener() {
+                        // This listener will tell us when interesting(tm) events happen in regards
+                        // to the sequence
+                        @Override
+                        public void onSequenceFinish() {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean("UserTapPassed", true);
+                            editor.apply();
+                        }
+
+                        @Override
+                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                        }
+
+                        @Override
+                        public void onSequenceCanceled(TapTarget lastTarget) {
+                            // Boo
+                        }
+                    }).start();
+
 
         return view;
+    }
+
+    public void showTapTarget(Context context, View targetView, String title, String description) {
+        Typeface baseFont = Typeface.createFromAsset(context.getAssets(), "fonts/iran_san.ttf");
+        TapTargetView.showFor((Activity) context,                 // `this` is an Activity
+                TapTarget.forView(targetView, title, description)
+                        // All options below are optional
+                        .outerCircleColor(R.color.colorAccent)      // Specify a color for the outer circle
+                        .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+//                        .targetCircleColor(R.color.colorWhite)   // Specify a color for the target circle
+                        .titleTextSize(22)                  // Specify the size (in sp) of the title text
+                        .titleTextColor(R.color.colorWhite)      // Specify the color of the title text
+                        .descriptionTextSize(12)            // Specify the size (in sp) of the description text
+                        .descriptionTextColor(R.color.colorGreen)  // Specify the color of the description text
+                        .textColor(R.color.colorWhite)            // Specify a color for both the title and description text
+                        .textTypeface(baseFont)  // Specify a typeface for the text
+                        .dimColor(R.color.colorBack)            // If set, will dim behind the view with 30% opacity of the given color
+                        .drawShadow(true)                   // Whether to draw a drop shadow or not
+                        .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
+                        .tintTarget(true)                   // Whether to tint the target view's color
+                        .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)// Specify a custom drawable to draw as the target
+                        .targetRadius(60),                  // Specify the target radius (in dp)
+                new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);      // This call is optional
+                        showTapTarget(context, _view.findViewById(R.id.checkMsg), "پیام های شما", "پیام دریافتی شما و درخواست دوستان شما اینجا قابل مشاهده هستند");
+                    }
+                });
     }
 
     private void GetUserFriends(MenuActivity menuActivity, AVLoadingIndicatorView loadingIndicatorView) {

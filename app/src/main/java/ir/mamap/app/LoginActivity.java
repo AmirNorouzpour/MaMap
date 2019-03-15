@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         _layout.setBackground(backView);
     }
 
+
     public void LoginRequest(String mobileNumber, String password) {
         LoginViewModel loginViewModel = new LoginViewModel();
         loginViewModel.Ip = GeneralUtils.GetIPAddress(true);
@@ -117,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                                 String FToken = null;
                                 FToken = FirebaseInstanceId.getInstance().getToken();
                                 sendRegistrationToServer(FToken);
+
                                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                                 startActivity(intent);
                             } else {

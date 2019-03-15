@@ -201,8 +201,7 @@ public class MapFragment extends Fragment {
 
         DialogBuilder dialogBuilder = new DialogBuilder(getActivity()).asBottomSheetDialog(true);
         dialogBuilder.setCustomView(myView);
-        dialogBuilder.setMessage("جزئیات موقعیت کاربر");
-        dialogBuilder.setTitle(_friendMap.getNickName());
+        dialogBuilder.setMessage(_friendMap.getNickName());
 
 //        dialogBuilder.setMessage(_friendMap.getNickName() + " با سرعت " + speed + " KM/H " + date + " در مختصات مشخص شده بوده است");
 

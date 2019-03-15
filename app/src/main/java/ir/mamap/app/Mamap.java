@@ -2,6 +2,7 @@ package ir.mamap.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,7 +28,7 @@ public class Mamap extends Application {
 
     private static Context sContext;
     public static String BaseUrl = "http://api.tasnimfurniture.com";
-    //public static String BaseUrl = "http://192.168.1.101:8080";
+    // public static String BaseUrl = "http://192.168.1.101:8080";
     public static ir.mamap.app.Models.User User = null;
 
     public static Context getContext() {
@@ -60,9 +61,15 @@ public class Mamap extends Application {
         e.printStackTrace(pw);
         String sStackTrace = sw.toString(); // stack trace as a string
 
+        //postToServer(sStackTrace);
+
+        Intent intent = new Intent(getContext(), ExceptionActivity.class);
+        intent.putExtra("StackTrace", sStackTrace);
+        startActivity(intent);
 
         System.exit(1); // kill off the crashed app
     }
+
 
     private String extractLogToFile() {
         PackageManager manager = this.getPackageManager();
