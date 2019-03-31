@@ -2,6 +2,7 @@ package ir.mamap.app.Models;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,16 +66,10 @@ public class MsgListAdapter extends BaseAdapter {
         TextView textViewBody = view.findViewById(R.id.txt_body);
         TextView textViewMsgNew = view.findViewById(R.id.msgNew);
 
-        Typeface baseFont = Typeface.createFromAsset(mContext.getAssets(), "fonts/iran_san.ttf");
-        titleTxt.setTypeface(baseFont);
-        dateTxt.setTypeface(baseFont);
-        textViewBody.setTypeface(baseFont);
-        btnOk.setTypeface(baseFont);
-        btnCancel.setTypeface(baseFont);
         view.setTag(currentItem);
         titleTxt.setText(currentItem.getTitle());
         textViewBody.setText(currentItem.getBody());
-
+        textViewBody.setGravity(Gravity.TOP);
         Date mDate = GeneralUtils.StringToDate(currentItem.getInsertDateTime(), "yyyy-MM-dd'T'HH:mm:ss");
         Date currentTime = Calendar.getInstance().getTime();
         view.setTag(currentItem);
@@ -83,24 +78,36 @@ public class MsgListAdapter extends BaseAdapter {
 
         if (currentItem.getExpireDateTime() != null) {
             Date eDate = GeneralUtils.StringToDate(currentItem.getExpireDateTime(), "yyyy-MM-dd'T'HH:mm:ss");
-            if (eDate.before(currentTime) || currentItem.getHideButtons()) {
+            if (eDate.before(currentTime) || currentItem.getHideButtons() || currentItem.isSeen()) {
                 HideButtons();
             }
         }
 
-        if (currentItem.getTag() == 0) {
-            HideButtons();
+        if (currentItem.getMessageHistoryTypeEnum() == 5 && !currentItem.isSeen()) {
+            btnOk.setVisibility(View.VISIBLE);
+            btnOk.setText("خوانده شده");
+            btnOk.setOnClickListener(v -> {
+                sendRes(currentItem.getId(), currentItem.getTag(), 1, currentItem.getMessageHistoryTypeEnum());
+                btnOk.setVisibility(View.INVISIBLE);
+            });
         }
 
-        btnOk.setOnClickListener(v -> {
-            sendRes(currentItem.getId(), currentItem.getTag(), 1);
-            HideButtons();
+        if (currentItem.getMessageHistoryTypeEnum() == 1 && !currentItem.isSeen()) {
+            btnOk.setVisibility(View.VISIBLE);
+            btnOk.setText("پذیرش");
+            btnOk.setOnClickListener(v -> {
+                sendRes(currentItem.getId(), currentItem.getTag(), 1, currentItem.getMessageHistoryTypeEnum());
+                HideButtons();
 
-        });
-        btnCancel.setOnClickListener(v -> {
-            sendRes(currentItem.getId(), currentItem.getTag(), 0);
-            HideButtons();
-        });
+            });
+            btnCancel.setVisibility(View.VISIBLE);
+            btnCancel.setText("عدم پذیرش");
+            btnCancel.setOnClickListener(v -> {
+                sendRes(currentItem.getId(), currentItem.getTag(), 0, currentItem.getMessageHistoryTypeEnum());
+                HideButtons();
+            });
+        }
+
 
         if (currentItem.isSeen())
             textViewMsgNew.setVisibility(View.GONE);
@@ -113,11 +120,12 @@ public class MsgListAdapter extends BaseAdapter {
         btnCancel.setVisibility(View.INVISIBLE);
     }
 
-    private void sendRes(int msgId, int mapId, int result) {
+    private void sendRes(int msgId, int mapId, int result, int type) {
         FriendResponse response = new FriendResponse();
         response.setAccept(result);
         response.setMsgId(msgId);
         response.setMapId(mapId);
+        response.setMessageHistoryTypeEnum(type);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/user/AddFriendResponse")
                 .addApplicationJsonBody(response)

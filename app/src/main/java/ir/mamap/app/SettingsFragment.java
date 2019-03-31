@@ -73,10 +73,11 @@ public class SettingsFragment extends Fragment {
         LinearLayout RulesLayout = view.findViewById(R.id.Rules);
         LinearLayout AboutUsLayout = view.findViewById(R.id.AboutUsLayout);
         LinearLayout SupportLayout = view.findViewById(R.id.SupportLayout);
+        LinearLayout UpgradeAccountLayout = view.findViewById(R.id.UpgradeAccount);
         RulesLayout.setOnClickListener(v -> OpenActivity(1, RulesActivity.class));
         AboutUsLayout.setOnClickListener(v -> OpenActivity(2, RulesActivity.class));
         SupportLayout.setOnClickListener(v -> OpenActivity(0, SupportActivity.class));
-
+        UpgradeAccountLayout.setOnClickListener(v -> OpenActivity(-1, UpgradeActivity.class));
 
         return view;
     }

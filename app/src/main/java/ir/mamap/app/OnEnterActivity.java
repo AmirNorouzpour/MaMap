@@ -18,9 +18,12 @@ import com.google.gson.reflect.TypeToken;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.net.URLEncoder;
+
 import ir.mamap.app.Models.ClientData;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.User;
+import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
@@ -61,13 +64,21 @@ public class OnEnterActivity extends AppCompatActivity {
                         return;
                     }
                     _sendCodeBtn.setVisibility(View.GONE);
-                    SendCode(mobile, false);
+                    try {
+                        SendCode(mobile, false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 } else {
                     StyleableToast.makeText(Mamap.getContext(), "لطفا شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG, R.style.warning).show();
                 }
             } else {
-                SendCode(mobile, true);
+                try {
+                    SendCode(mobile, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         });
@@ -84,29 +95,37 @@ public class OnEnterActivity extends AppCompatActivity {
 
     }
 
-    public void SendCode(String mobileNumber, boolean needVerification) {
+    public void SendCode(String mobileNumber, boolean needVerification) throws Exception {
         OnEnterActivity context = OnEnterActivity.this;
 
         AVLoadingIndicatorView loadingIndicatorView = findViewById(R.id.avi);
         GeneralUtils.showLoading(loadingIndicatorView);
 
+        String mobileEncoded = CryptoHelper.encrypt(mobileNumber);
+        mobileEncoded = URLEncoder.encode(mobileEncoded, "utf-8");
+
         NetworkManager.builder()
-                .setUrl(Mamap.BaseUrl + "/api/VerificationCode/RequestVerification/{Mobile}/{NeedVerification}")
-                .addPathParameter("Mobile", mobileNumber)
-                .addPathParameter("NeedVerification", Boolean.toString(needVerification))
+                .setUrl(Mamap.BaseUrl + "/api/VerificationCode/RequestVerification")
+                .addQueryParameter("Mobile", mobileEncoded)
+                .addQueryParameter("NeedVerification", Boolean.toString(needVerification))
                 .get(new TypeToken<ClientData<User>>() {
                 }, new INetwork<ClientData<User>>() {
                     @Override
                     public void onResponse(ClientData<User> response) {
                         GeneralUtils.hideLoading(loadingIndicatorView);
                         GeneralUtils.showToast(response.getMsg(), Toast.LENGTH_LONG, response.getOutType());
+
+                        if (response.getOutType() == OutType.Error) {
+                            return;
+                        }
+
                         if (response.getEntity() != null) {
                             Intent intent = new Intent(context, LoginActivity.class);
                             intent.putExtra("MobileNumber", mobileNumber);
                             User user = response.getEntity();
                             intent.putExtra("User", user);
                             startActivity(intent);
-                        } else {
+                        } else if (response.getEntityId() > 0) {
                             GeneralUtils.hideLoading(loadingIndicatorView);
                             Intent intent = new Intent(context, VerificationActivity.class);
                             intent.putExtra("MobileNumber", mobileNumber);

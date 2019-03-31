@@ -68,9 +68,9 @@ public class LocationService extends Service {
                 distance = preLocation.distanceTo(location);
             }
 
-            String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + location.getSpeed() + ",,,0";
+            String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + getSpeed(location) + ",,,0";
             //GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
-            if (distance > 500 || distance == 51) {
+            if (distance > 100 || distance == 51) {
 
 
                 String dataEnc = null;
@@ -83,16 +83,24 @@ public class LocationService extends Service {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserLocLat", String.valueOf(location.getLatitude()));
                 editor.putString("UserLocLon", String.valueOf(location.getLongitude()));
-                editor.putString("UserSpeed", String.valueOf(location.getSpeed()));
+                editor.putString("UserSpeed", String.valueOf(getSpeed(location)));
                 editor.apply();
             }
 
             SharedPreferences.Editor sharedPreferencesUser = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE).edit();
             sharedPreferencesUser.putString("UserLocLat", String.valueOf(location.getLatitude()));
             sharedPreferencesUser.putString("UserLocLon", String.valueOf(location.getLongitude()));
-            sharedPreferencesUser.putString("UserSpeed", String.valueOf(location.getSpeed()));
+            sharedPreferencesUser.putString("UserSpeed", String.valueOf(getSpeed(location)));
             sharedPreferencesUser.apply();
 
+        }
+
+        public float getSpeed(Location location) {
+            if (location != null) {
+                int speedKmh = (int) ((location.getSpeed() * 3600) / 1000);
+                return speedKmh;
+            }
+            return 0;
         }
 
 

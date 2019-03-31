@@ -31,9 +31,9 @@
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="b6b6b6" />
                             <entry key="height" value="512" />
-                            <entry key="outputName" value="ic_conversation" />
+                            <entry key="outputName" value="ic_validation" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\Amir\Downloads\conversation.svg" />
+                            <entry key="sourceFile" value="C:\Users\Amir\Downloads\validation.svg" />
                             <entry key="width" value="512" />
                           </map>
                         </option>

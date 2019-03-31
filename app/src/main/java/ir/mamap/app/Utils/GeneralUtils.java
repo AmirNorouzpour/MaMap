@@ -158,7 +158,7 @@ public class GeneralUtils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         SharedPreferences.Editor editor = context.getSharedPreferences("token", MODE_PRIVATE).edit();
         editor.putString("accesToken", "bearer " + token.access_token);
-        editor.putInt("userId", userId).apply();
+        editor.putInt("userId", userId);
         Date expires_in = Calendar.getInstance().getTime();//now
         int numberOfseconds = token.expires_in;
         Calendar calendar = Calendar.getInstance();

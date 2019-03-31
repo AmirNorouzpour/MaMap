@@ -9,6 +9,9 @@ public class FriendResponse {
     private int msgId;
     @SerializedName("Accept")
     private int accept;
+    @SerializedName("Type")
+    private int messageHistoryTypeEnum;
+
 
     public void setMapId(int mapId) {
         this.mapId = mapId;
@@ -20,5 +23,9 @@ public class FriendResponse {
 
     public void setAccept(int accept) {
         this.accept = accept;
+    }
+
+    public void setMessageHistoryTypeEnum(int type) {
+        this.messageHistoryTypeEnum = type;
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.gsonparserfactory.GsonParserFactory;
@@ -19,16 +20,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.cert.CertificateException;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import ir.map.sdk_map.MapSDK;
 import ir.oxima.dialogbuilder.DialogBuilderConfig;
+import okhttp3.OkHttpClient;
 
 
-public class Mamap extends Application {
+public class Mamap extends MultiDexApplication {
 
     private static Context sContext;
-    public static String BaseUrl = "http://api.tasnimfurniture.com";
-    // public static String BaseUrl = "http://192.168.1.101:8080";
+    //    public static String BaseUrl = "http://api.tasnimfurniture.com";
+    //public static String BaseUrl = "https://mamap.ir";
+     public static String BaseUrl = "http://192.168.1.101:8080";
     public static ir.mamap.app.Models.User User = null;
 
     public static Context getContext() {
@@ -38,7 +48,16 @@ public class Mamap extends Application {
     public void onCreate() {
         // Setup handler for uncaught exceptions.
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-        AndroidNetworking.initialize(getApplicationContext());
+
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .build();
+
+        AndroidNetworking.initialize(getApplicationContext(), okHttpClient);
+//        AndroidNetworking.initialize(getApplicationContext(), getUnsafeOkHttpClient());
+        AndroidNetworking.setUserAgent("Mozilla/5.0(X11; Ubuntu; Linux x86_64;rv:53.0)Gecko/20100101 Firefox/53.0");
         AndroidNetworking.setParserFactory(new GsonParserFactory(gson));
 
 
@@ -137,7 +156,50 @@ public class Mamap extends Application {
         return fullName;
     }
 
+    private OkHttpClient getUnsafeOkHttpClient() {
 
+        try {
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType) throws CertificateException {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[0];
+                }
+            }};
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts,
+                    new java.security.SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+            final SSLSocketFactory sslSocketFactory = sslContext
+                    .getSocketFactory();
+
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient = okHttpClient.newBuilder()
+                    .sslSocketFactory(sslSocketFactory)
+                    .readTimeout(5, TimeUnit.MINUTES)
+                    .writeTimeout(5, TimeUnit.MINUTES)
+                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER).build();
+
+            return okHttpClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
 
 

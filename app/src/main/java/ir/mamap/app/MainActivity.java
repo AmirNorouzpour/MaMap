@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 //        ApplicationCrashHandler.installHandler();
         Typeface baseFont = Typeface.createFromAsset(MainActivity.this.getAssets(), "fonts/iran_san.ttf");

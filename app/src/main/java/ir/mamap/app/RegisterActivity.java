@@ -22,6 +22,7 @@ import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.Token;
 import ir.mamap.app.Models.User;
+import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
@@ -101,8 +102,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void UpdatePassword(AVLoadingIndicatorView loadingIndicatorView) {
         User user = new User();
-        user.setMobile(mobileNumber);
-        user.setPassword(PasswordTxt.getText().toString());
+
+        try {
+            user.setMobile(CryptoHelper.encrypt(mobileNumber));
+            user.setPassword(CryptoHelper.encrypt(PasswordTxt.getText().toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/user/UpdatePassword")

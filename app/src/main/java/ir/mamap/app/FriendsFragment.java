@@ -24,20 +24,25 @@ import com.androidnetworking.error.ANError;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import ir.mamap.app.Models.ClientData;
+import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.CustomAdapter;
 import ir.mamap.app.Models.FriendMap;
 import ir.mamap.app.Models.FriendRequestStatus;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.User;
+import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -256,13 +261,23 @@ public class FriendsFragment extends Fragment {
         GeneralUtils.showLoading(loadingIndicatorView);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/user/GetUserFriends")
-                .get(new TypeToken<ClientData<ArrayList<FriendMap>>>() {
-                }, new INetwork<ClientData<ArrayList<FriendMap>>>() {
+                .get(new TypeToken<ClientDataNonGeneric>() {
+                }, new INetwork<ClientDataNonGeneric>() {
                     @Override
-                    public void onResponse(ClientData<ArrayList<FriendMap>> response) {
+                    public void onResponse(ClientDataNonGeneric response) {
                         GeneralUtils.hideLoading(loadingIndicatorView);
-                        if (response.getOutType() == OutType.Success && response.getEntity() != null) {
-                            ArrayList<FriendMap> lst = response.getEntity();
+                        if (response.getOutType() == OutType.Success && response.getTag() != null) {
+                            String lstStrEnc = (String) response.getTag();
+                            String lstStr;
+                            try {
+                                lstStr = CryptoHelper.decrypt(lstStrEnc);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return;
+                            }
+                            Type listType = new TypeToken<ArrayList<FriendMap>>() {}.getType();
+                            List<FriendMap> lst = new Gson().fromJson(lstStr, listType);
+
                             //List<FriendMap> lst2 = GeneralUtils.StringToArray(response.getTag().toString(), FriendMap[].class);
                             for (int i = 0; i < lst.size(); i++) {
                                 arrayItem.add(lst.get(i));

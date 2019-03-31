@@ -19,6 +19,18 @@ public class UserMessage {
     private int senderUserId;
     @SerializedName("HideButtons")
     private boolean hideButtons;
+    @SerializedName("MessageHistoryTypeEnum")
+    private int messageHistoryTypeEnum;
+
+
+    public int getMessageHistoryTypeEnum() {
+        return messageHistoryTypeEnum;
+    }
+
+    public void setMessageHistoryTypeEnum(int messageHistoryTypeEnum) {
+        this.messageHistoryTypeEnum = messageHistoryTypeEnum;
+    }
+
 
     public boolean getHideButtons() {
         return hideButtons;

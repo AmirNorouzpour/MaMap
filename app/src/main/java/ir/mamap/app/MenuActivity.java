@@ -3,6 +3,9 @@ package ir.mamap.app;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +15,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.LocationManager;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
@@ -39,6 +46,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -48,6 +56,8 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import ir.mamap.app.Models.ClientData;
+import ir.mamap.app.Models.ClientDataNonGeneric;
+import ir.mamap.app.Models.FriendMap;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.User;
 import ir.mamap.app.Utils.CryptoHelper;
@@ -56,7 +66,9 @@ import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
 
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import ir.oxima.dialogbuilder.DialogBuilder;
@@ -91,21 +103,29 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
             startService(mServiceIntent);
         }
         GeneralUtils.startPowerSaverIntent(MenuActivity.this);
-
-      // FriendsFragment.showTapTarget(MenuActivity.this,bottomNav,"منو اصلی برنامه","منو اصلی برنامه جهت دسترسی به دوستان ، نقشه، تنظیمات و حساب کاربری");
+        // FriendsFragment.showTapTarget(MenuActivity.this,bottomNav,"منو اصلی برنامه","منو اصلی برنامه جهت دسترسی به دوستان ، نقشه، تنظیمات و حساب کاربری");
     }
 
     public void GetUserAccount() {
         GeneralUtils.showLoading(loadingIndicatorView);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/user/GetUserAccount")
-                .get(new TypeToken<ClientData<User>>() {
-                }, new INetwork<ClientData<User>>() {
+                .get(new TypeToken<ClientDataNonGeneric>() {
+                }, new INetwork<ClientDataNonGeneric>() {
                     @Override
-                    public void onResponse(ClientData<User> response) {
+                    public void onResponse(ClientDataNonGeneric response) {
                         GeneralUtils.hideLoading(loadingIndicatorView);
-                        if (response.getOutType() == OutType.Success && response.getEntity() != null) {
-                            Mamap.User = response.getEntity();
+                        if (response.getOutType() == OutType.Success && response.getTag() != null) {
+
+                            String userStrEnc = (String) response.getTag();
+                            try {
+                                String userStr = CryptoHelper.decrypt(userStrEnc);
+                                Mamap.User = new Gson().fromJson(userStr, User.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return;
+                            }
+
                             loadFragment(new FriendsFragment());
                             // startService(new Intent(MenuActivity.this, LocationService.class));
 

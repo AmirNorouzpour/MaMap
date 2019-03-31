@@ -9,11 +9,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.SystemLog;
+import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
@@ -36,7 +38,13 @@ public class ExceptionActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.button2);
         backBtn.setOnClickListener(v -> end());
         sendBtn = findViewById(R.id.button1);
-        postToServer(data);
+
+        try {
+            postToServer(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         sendBtn.setOnClickListener(v -> end());
         detialBtn.setOnClickListener(view -> {
             if (stackTraceTextView.getVisibility() == View.VISIBLE)
@@ -54,7 +62,7 @@ public class ExceptionActivity extends AppCompatActivity {
     }
 
 
-    public void postToServer(String data) {
+    public void postToServer(String data) throws Exception {
 
         SystemLog systemLog = new SystemLog();
         systemLog.setException(data);
@@ -62,10 +70,14 @@ public class ExceptionActivity extends AppCompatActivity {
         systemLog.setIp(GeneralUtils.GetIPAddress(true));
         systemLog.setLogger("Android");
         systemLog.setCallSite(GeneralUtils.GetDeviceInfo());
-
+        ClientDataNonGeneric dataToSend = new ClientDataNonGeneric();
+        Gson gson = new Gson();
+        String json = gson.toJson(systemLog);
+        String tag = CryptoHelper.encrypt(json);
+        dataToSend.setTag(tag);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/Error/AddError")
-                .addApplicationJsonBody(systemLog)
+                .addApplicationJsonBody(dataToSend)
                 .post(new TypeToken<ClientDataNonGeneric>() {
                 }, new INetwork<ClientDataNonGeneric>() {
 

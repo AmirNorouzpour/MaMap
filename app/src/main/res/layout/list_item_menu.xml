@@ -4,14 +4,14 @@
     android:layout_height="75dp"
     android:layoutDirection="rtl"
     android:orientation="horizontal"
-    android:padding="5dp">
-
+    android:padding="5dp"
+    android:weightSum="10">
 
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.6"
+        android:layout_weight="9"
         android:orientation="vertical">
 
         <LinearLayout
@@ -27,9 +27,9 @@
                 android:layout_weight="7"
                 android:fontFamily="@fonts/iran_san"
                 android:gravity="right|bottom"
-                android:textColor="@color/colorText2"
                 android:paddingRight="5dp"
-                android:text="Name" />
+                android:text="Name"
+                android:textColor="@color/colorText2" />
 
 
         </LinearLayout>
@@ -41,10 +41,26 @@
             android:layout_marginTop="5dp"
             android:layout_weight="0.5"
             android:fontFamily="@fonts/iran_san"
-            android:textColor="@color/colorText"
             android:gravity="right"
             android:paddingRight="5dp"
-            android:text=""/>
+            android:text=""
+            android:textColor="@color/colorText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.7">
+
+        <ImageView
+            android:id="@+id/img_validation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:visibility="invisible"
+            android:src="@drawable/ic_validation" />
 
     </LinearLayout>
 

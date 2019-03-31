@@ -130,7 +130,7 @@ public class NetworkManager<T> {
                         if (anError.getErrorCode() == 401) {
                             Token token = new Token();
                             token.expires_in = 0;
-                            GeneralUtils.writeToken(token, 0, Mamap.getContext());
+                            GeneralUtils.writeToken(token, -1, Mamap.getContext());
                             post(type, iNetwork);
                             return;
                         }
@@ -190,7 +190,7 @@ public class NetworkManager<T> {
                     if (anError.getErrorCode() == 401) {
                         Token token = new Token();
                         token.expires_in = 0;
-                        GeneralUtils.writeToken(token, 0, Mamap.getContext());
+                        GeneralUtils.writeToken(token, -1, Mamap.getContext());
                         get(type, iNetwork);
                         return;
                     }
@@ -256,7 +256,7 @@ public class NetworkManager<T> {
                         if (error.getErrorCode() == 401) {
                             Token token = new Token();
                             token.expires_in = 0;
-                            GeneralUtils.writeToken(token, 0, Mamap.getContext());
+                            GeneralUtils.writeToken(token, -1, Mamap.getContext());
                             upload(file, iNetwork);
                             return;
                         }

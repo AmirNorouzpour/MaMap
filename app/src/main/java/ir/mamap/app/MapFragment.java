@@ -256,7 +256,13 @@ public class MapFragment extends Fragment {
                     @Override
                     public void onResponse(ClientDataNonGeneric response) {
                         if (response.getOutType() == OutType.Success && response.getTag() != null) {
-                            double exp = (double) response.getTag();
+                            String expStrEnc = (String) response.getTag();
+                            double exp = 0;
+                            try {
+                                exp = Double.parseDouble(CryptoHelper.decrypt(expStrEnc));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             SetText((int) exp, true);
                         }
                     }
