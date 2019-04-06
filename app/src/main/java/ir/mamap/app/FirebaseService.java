@@ -1,21 +1,31 @@
 package ir.mamap.app;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +43,12 @@ import ir.mamap.app.network.NetworkManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 public class FirebaseService extends FirebaseMessagingService {
@@ -87,32 +103,9 @@ public class FirebaseService extends FirebaseMessagingService {
                 if (object.has("TRId"))
                     trId = object.getInt("TRId");
                 if (catId == 1) {
-                    SharedPreferences sharedPreferences = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE);
-                    String lat = sharedPreferences.getString("UserLocLat", null);
-                    String lon = sharedPreferences.getString("UserLocLon", null);
-                    String speed = sharedPreferences.getString("UserSpeed", null);
-
-                    GPSTracker gps = new GPSTracker(Mamap.getContext());
-                    if ((!gps.isGPSEnabled && gps.isNetworkEnabled) || gps.getLatitude() == 0)
-                        SystemClock.sleep(5000);
-                    if (gps.getLatitude() != 0) {
-                        lat = String.valueOf(gps.getLatitude());
-                        lon = String.valueOf(gps.getLongitude());
-                        speed = String.valueOf(gps.getSpeed());
-                    }
-                    gps.stopUsingGPS();
-                    try {
-                        int batLevel = 0;
-                        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
-                        }
-                        String data = tag + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
-                        String dataEnc = CryptoHelper.encrypt(data);
-                        SendUserLocation(dataEnc.replace("\n", ""));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    lastSent = false;
+                    sendNotification("req1","");
+                    requestLocationUpdates(tag, trId);
                 }
                 if (catId == 7)
                     updateMyActivity(Mamap.getContext(), String.valueOf(catId), String.valueOf(tag));
@@ -207,6 +200,36 @@ public class FirebaseService extends FirebaseMessagingService {
         // [END dispatch_job]*/
     }
 
+    public void appendLog(String text)
+    {
+        File logFile = new File("sdcard/log.file");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Handle time allotted to BroadcastReceivers.
      */
@@ -293,5 +316,65 @@ public class FirebaseService extends FirebaseMessagingService {
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    static boolean lastSent = true;
+
+    private void requestLocationUpdates(int tag, int trId) {
+        LocationRequest request = new LocationRequest();
+        //Specify how often your app should request the device’s location//
+        request.setInterval(10000);
+
+        //Get the most accurate location data available//
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        //If the app currently has access to the location permission...//
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            sendNotification("req2","");
+            //...then request location updates//
+            client.requestLocationUpdates(request, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+
+                    SharedPreferences sharedPreferences = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE);
+                    String lat = sharedPreferences.getString("UserLocLat", null);
+                    String lon = sharedPreferences.getString("UserLocLon", null);
+                    String speed = sharedPreferences.getString("UserSpeed", null);
+
+                    if (lastSent) {
+                        return;
+                    }
+
+                    sendNotification("req3","");
+                    Location gps = locationResult.getLastLocation();
+//                    if ((!gps.isGPSEnabled && gps.isNetworkEnabled) || gps.getLatitude() == 0)
+//                        SystemClock.sleep(5000);
+                    if (gps.getLatitude() != 0) {
+                        lastSent = true;
+                        lat = String.valueOf(gps.getLatitude());
+                        lon = String.valueOf(gps.getLongitude());
+                        speed = String.valueOf(gps.getSpeed());
+                    }
+                    client.removeLocationUpdates(this);
+//                    gps.stopUsingGPS();
+                    try {
+//                        int batLevel = 0;
+//                        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+//                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+//                        }
+                        String data = tag + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
+                        String dataEnc = CryptoHelper.encrypt(data);
+                        SendUserLocation(dataEnc.replace("\n", ""));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }, Looper.getMainLooper());
+        }
     }
 }

@@ -1,7 +1,7 @@
 package ir.mamap.app.Models;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.reflect.TypeToken;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import ir.mamap.app.Mamap;
+import ir.mamap.app.MessageListActivity;
 import ir.mamap.app.R;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
@@ -121,6 +123,8 @@ public class MsgListAdapter extends BaseAdapter {
     }
 
     private void sendRes(int msgId, int mapId, int result, int type) {
+        ProgressDialog dialog = ProgressDialog.show(mContext, "",
+                "شکیبا باشید", true);
         FriendResponse response = new FriendResponse();
         response.setAccept(result);
         response.setMsgId(msgId);
@@ -133,11 +137,14 @@ public class MsgListAdapter extends BaseAdapter {
                 }, new INetwork<ClientDataNonGeneric>() {
                     @Override
                     public void onResponse(ClientDataNonGeneric data) {
+                        dialog.dismiss();
+                        ((MessageListActivity) mContext).GetUserMessages();
                         GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
                     }
 
                     @Override
                     public void onError(ANError anError) {
+                        dialog.dismiss();
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
                 });

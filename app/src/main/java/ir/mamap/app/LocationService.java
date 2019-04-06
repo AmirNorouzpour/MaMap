@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.reflect.TypeToken;
@@ -18,6 +19,7 @@ import ir.mamap.app.Models.ClientData;
 import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Utils.CryptoHelper;
+import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
 
@@ -72,7 +74,7 @@ public class LocationService extends Service {
             //GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
             if (distance > 100 || distance == 51) {
 
-
+               // GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
                 String dataEnc = null;
                 try {
                     dataEnc = CryptoHelper.encrypt(data);
@@ -115,6 +117,7 @@ public class LocationService extends Service {
                         @Override
                         public void onResponse(ClientData<BaseResponse> response) {
                             if (response.getOutType() == OutType.Success) {
+                              //  GeneralUtils.showToast("DataUpdated : " + data, Toast.LENGTH_SHORT, OutType.Success);
                             }
                         }
 

@@ -58,7 +58,7 @@ public class MessageListActivity extends AppCompatActivity {
         GetUserMessages();
     }
 
-    private void GetUserMessages() {
+    public void GetUserMessages() {
         ArrayList arrayItem = new ArrayList<>();
         TextView notFound = findViewById(R.id.NotFoundImg);
         ListView mList = findViewById(R.id.list_view);

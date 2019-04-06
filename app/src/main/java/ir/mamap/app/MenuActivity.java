@@ -353,7 +353,8 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
             if (message.equals("1")) {
 
             } else if (message.equals("7")) {
-                CurrentFragment.ShowMsg(tUserId);
+                if (CurrentFragment != null)
+                    CurrentFragment.ShowMsg(tUserId);
             }
         }
     };

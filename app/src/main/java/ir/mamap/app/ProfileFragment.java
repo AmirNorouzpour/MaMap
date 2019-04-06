@@ -2,6 +2,7 @@ package ir.mamap.app;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -310,6 +311,8 @@ public class ProfileFragment extends Fragment {
 
 
     private void SendImageToServer(File file) {
+        ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                "در حال ارسال", true);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/user/UploadPicture")
                 .upload(file, new INetwork<JSONObject>() {
@@ -325,12 +328,14 @@ public class ProfileFragment extends Fragment {
                             editor.putString("PFileName", res.getTag() + "");
                             editor.apply();
                         }
+                        dialog.dismiss();
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
+                        dialog.dismiss();
                     }
 
                 });

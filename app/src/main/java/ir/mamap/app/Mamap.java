@@ -37,8 +37,8 @@ public class Mamap extends MultiDexApplication {
 
     private static Context sContext;
     //    public static String BaseUrl = "http://api.tasnimfurniture.com";
-    //public static String BaseUrl = "https://mamap.ir";
-     public static String BaseUrl = "http://192.168.1.101:8080";
+    public static String BaseUrl = "https://mamap.ir";
+    //public static String BaseUrl = "http://192.168.1.101:8080";
     public static ir.mamap.app.Models.User User = null;
 
     public static Context getContext() {
