@@ -14,6 +14,7 @@ public class UpgradeActivity extends AppCompatActivity implements RadioGroup.OnC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upgrade);
 

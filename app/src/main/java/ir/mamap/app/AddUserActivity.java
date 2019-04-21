@@ -38,8 +38,11 @@ public class AddUserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
+
+
         searchBtn = findViewById(R.id.SearchBtn);
         mList = findViewById(R.id.list_view);
         paramTxt = findViewById(R.id.ParamTxt);
@@ -113,7 +116,7 @@ public class AddUserActivity extends AppCompatActivity {
                             GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         }
 
-                    });
+                    }, AddUserActivity.this);
 
         });
     }

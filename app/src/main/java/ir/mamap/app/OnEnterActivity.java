@@ -33,9 +33,11 @@ public class OnEnterActivity extends AppCompatActivity {
     EditText _mobileNumber;
     ConstraintLayout _layout;
     TextView _oTPTxt, _ruleTxt, _helpTxt;
+    String typeFromMainActivity = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_enter);
         _oTPTxt = findViewById(R.id.OTPTxt);
@@ -52,6 +54,7 @@ public class OnEnterActivity extends AppCompatActivity {
         _sendCodeBtn.setTypeface(baseFont);
         _helpTxt.setTypeface(baseFont);
         String mobileFromIntent = getIntent().getStringExtra("Mobile");
+        typeFromMainActivity = getIntent().getStringExtra("Type");
         _mobileNumber.setText(mobileFromIntent);
 
         _sendCodeBtn.setOnClickListener(view -> {
@@ -65,7 +68,7 @@ public class OnEnterActivity extends AppCompatActivity {
                     }
                     _sendCodeBtn.setVisibility(View.GONE);
                     try {
-                        SendCode(mobile, false);
+                        SendCode(mobile, typeFromMainActivity != null);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -130,6 +133,7 @@ public class OnEnterActivity extends AppCompatActivity {
                             Intent intent = new Intent(context, VerificationActivity.class);
                             intent.putExtra("MobileNumber", mobileNumber);
                             intent.putExtra("NeedVerification", response.getEntityId());
+                            intent.putExtra("Register", typeFromMainActivity);
                             startActivity(intent);
                         }
                         _sendCodeBtn.setVisibility(View.VISIBLE);
@@ -141,7 +145,7 @@ public class OnEnterActivity extends AppCompatActivity {
                         GeneralUtils.hideLoading(loadingIndicatorView);
                         _sendCodeBtn.setVisibility(View.VISIBLE);
                     }
-                });
+                }, OnEnterActivity.this);
     }
 
 }

@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -69,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mobileNumber = getIntent().getStringExtra("MobileNumber");
         String userName = getIntent().getStringExtra("UserName");
+        String register = getIntent().getStringExtra("Register");
         int needVerification = getIntent().getIntExtra("NeedVerification", 0);
 
         MobileTxt.setText(mobileNumber);
@@ -92,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             AVLoadingIndicatorView loadingIndicatorView = findViewById(R.id.avi);
             GeneralUtils.showLoading(loadingIndicatorView);
 
-            if (needVerification == 1) {
+            if (needVerification == 1 && register == null) {
                 UpdatePassword(loadingIndicatorView);
             } else {
                 AddUser(user, context, loadingIndicatorView);
@@ -137,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                         GeneralUtils.hideLoading(loadingIndicatorView);
                         GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
                     }
-                });
+                }, RegisterActivity.this);
     }
 
 
@@ -159,7 +161,7 @@ public class RegisterActivity extends AppCompatActivity {
                             GeneralUtils.writeToken(token, token.userId, RegisterActivity.this);
                             String FToken = null;
                             FToken = FirebaseInstanceId.getInstance().getToken();
-                            LoginActivity.sendRegistrationToServer(FToken);
+                            LoginActivity.sendRegistrationToServer(FToken, RegisterActivity.this);
                             startActivity(intent);
                         }
                     }
@@ -169,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                         GeneralUtils.hideLoading(loadingIndicatorView);
                         GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
                     }
-                });
+                }, RegisterActivity.this);
     }
 }
 

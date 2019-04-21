@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -21,6 +22,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -28,6 +32,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import ir.mamap.app.Utils.LocaleUtils;
 import ir.map.sdk_map.MapSDK;
 import ir.oxima.dialogbuilder.DialogBuilderConfig;
 import okhttp3.OkHttpClient;
@@ -43,6 +48,10 @@ public class Mamap extends MultiDexApplication {
 
     public static Context getContext() {
         return sContext;
+    }
+
+    public static LanguageType getLanguageType() {
+        return LanguageType.forValue("en");
     }
 
     public void onCreate() {
@@ -63,6 +72,8 @@ public class Mamap extends MultiDexApplication {
 
         sContext = getApplicationContext();
         super.onCreate();
+
+
         MapSDK.init(this);
         DialogBuilderConfig.builder()
                 .setActionFontPath("fonts/iran_san.ttf")

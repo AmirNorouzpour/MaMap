@@ -245,7 +245,7 @@ public class MapFragment extends Fragment {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
 
-                });
+                }, getActivity());
     }
 
     private void GetUserExpLong() {
@@ -272,7 +272,7 @@ public class MapFragment extends Fragment {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
 
-                });
+                }, getActivity());
     }
 
     CountDownTimer timer;
@@ -288,7 +288,7 @@ public class MapFragment extends Fragment {
                         if (millisUntilFinished / 1000 > 60) {
                             int min = (int) millisUntilFinished / 60000;
                             int sec = (int) millisUntilFinished % 60000;
-                            String secStr = sec > 9 ? sec / 1000 + "" : "0" + sec / 1000;
+                            String secStr = sec > 9000 ? sec / 1000 + "" : "0" + sec / 1000;
                             StatusTxt.setText("بروزرسانی : " + min + ":" + secStr);
                         } else
                             StatusTxt.setText("بروزرسانی : " + millisUntilFinished / 1000);

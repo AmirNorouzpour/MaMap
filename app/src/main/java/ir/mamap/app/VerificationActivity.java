@@ -39,6 +39,7 @@ public class VerificationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
@@ -66,6 +67,7 @@ public class VerificationActivity extends AppCompatActivity {
         OTPTxt.setTypeface(baseFont);
 
         String mobileNumber = getIntent().getStringExtra("MobileNumber");
+        String registerTag = getIntent().getStringExtra("Register");
         needVerification = getIntent().getIntExtra("NeedVerification", 0);
         sendCodeText.setText("کد 4 رقمی ارسال شده به " + mobileNumber + " را وارد کنید");
 
@@ -152,9 +154,9 @@ public class VerificationActivity extends AppCompatActivity {
 
                     NetworkManager.builder()
                             .setUrl(Mamap.BaseUrl + "/api/VerificationCode/CheckVerificationCode/{Mobile}/{Code}/{NeedVerification}")
-                            .addPathParameter("Mobile", mobileNumber)
-                            .addPathParameter("Code", code)
-                            .addPathParameter("NeedVerification", Integer.toString(needVerification))
+                            .addQueryParameter("Mobile", mobileNumber)
+                            .addQueryParameter("Code", code)
+                            .addQueryParameter("NeedVerification", Integer.toString(needVerification))
                             .get(new TypeToken<ClientDataNonGeneric>() {
                             }, new INetwork<ClientDataNonGeneric>() {
 
@@ -166,6 +168,7 @@ public class VerificationActivity extends AppCompatActivity {
                                         Intent intent = new Intent(VerificationActivity.this, RegisterActivity.class);
                                         intent.putExtra("MobileNumber", mobileNumber);
                                         intent.putExtra("NeedVerification", needVerification);
+                                        intent.putExtra("Register", registerTag);
                                         if (data.getTag() != null)
                                             intent.putExtra("UserName", data.getTag().toString());
                                         startActivity(intent);
@@ -177,7 +180,7 @@ public class VerificationActivity extends AppCompatActivity {
                                     GeneralUtils.hideLoading(loadingIndicatorView);
                                     GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
                                 }
-                            });
+                            }, VerificationActivity.this);
                 }
             }
         });

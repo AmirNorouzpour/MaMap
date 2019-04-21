@@ -1,5 +1,6 @@
 package ir.mamap.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -117,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                                 GeneralUtils.writeToken(token, user.getUserId(), LoginActivity.this);
                                 String FToken = null;
                                 FToken = FirebaseInstanceId.getInstance().getToken();
-                                sendRegistrationToServer(FToken);
+                                sendRegistrationToServer(FToken, LoginActivity.this);
 
                                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                                 startActivity(intent);
@@ -136,10 +138,10 @@ public class LoginActivity extends AppCompatActivity {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         LoginCodeBtn.setVisibility(View.VISIBLE);
                     }
-                });
+                }, LoginActivity.this);
     }
 
-    public static void sendRegistrationToServer(String token) {
+    public static void sendRegistrationToServer(String token, Context context) {
 
         DeviceInformation deviceInformation = new DeviceInformation();
         deviceInformation.setToken(token);
@@ -166,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onError(ANError anError) {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
-                });
+                }, context);
 
     }
 }

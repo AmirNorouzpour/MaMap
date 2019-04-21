@@ -77,7 +77,7 @@ public class SettingsFragment extends Fragment {
         RulesLayout.setOnClickListener(v -> OpenActivity(1, RulesActivity.class));
         AboutUsLayout.setOnClickListener(v -> OpenActivity(2, RulesActivity.class));
         SupportLayout.setOnClickListener(v -> OpenActivity(0, SupportActivity.class));
-        UpgradeAccountLayout.setOnClickListener(v -> OpenActivity(-1, UpgradeActivity.class));
+        UpgradeAccountLayout.setOnClickListener(v -> GeneralUtils.showToast("نسخه آزمایشی محدودیتی ندارد", Toast.LENGTH_SHORT, OutType.Success));// OpenActivity(-1, UpgradeActivity.class)
 
         return view;
     }
@@ -115,7 +115,7 @@ public class SettingsFragment extends Fragment {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
                     }
-                });
+                }, getActivity());
 
     }
 

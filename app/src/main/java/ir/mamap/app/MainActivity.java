@@ -16,12 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.reflect.TypeToken;
-import com.rubengees.introduction.IntroductionActivity;
 import com.rubengees.introduction.IntroductionBuilder;
-import com.rubengees.introduction.Option;
 import com.rubengees.introduction.Slide;
 import com.rubengees.introduction.interfaces.OnSlideListener;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -35,8 +31,9 @@ import ir.mamap.app.Models.Version;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
-
 import ir.oxima.dialogbuilder.DialogBuilder;
+
+import static ir.mamap.app.Mamap.getContext;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        ApplicationCrashHandler.installHandler();
@@ -68,10 +66,9 @@ public class MainActivity extends AppCompatActivity {
         layoutLaunch.setBackground(defaultBackgeroundDrawable);
         TextView versionTxt = findViewById(R.id.versionTxt);
         loadingIndicatorView = findViewById(R.id.avi);
-        GeneralUtils.showLoading(loadingIndicatorView);
-        versionTxt.setText(" نسخه " + GeneralUtils.GetVersionName());
+        versionTxt.setText(" نسخه " + "آزمایشی");//GeneralUtils.GetVersionName()
 
-        SharedPreferences sharedPreferences = Mamap.getContext().getSharedPreferences("UserGuide", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserGuide", MODE_PRIVATE);
         if (!sharedPreferences.getBoolean("UserIntroPassed", false)) {
             new IntroductionBuilder(MainActivity.this)
                     .withSlides(generateSlides())
@@ -89,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        SharedPreferences sharedPreferences = Mamap.getContext().getSharedPreferences("UserGuide", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserGuide", MODE_PRIVATE);
         sharedPreferences.edit().putBoolean("UserIntroPassed", true).apply();
         CheckVersion();
     }
@@ -135,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void CheckVersion() {
-
+        GeneralUtils.showLoading(loadingIndicatorView);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/Version/CheckVersion/{Platform}/{VersionCode}")
                 .addPathParameter("Platform", "3")
@@ -156,10 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(ANError anError) {
-                        GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
                     }
-                });
+                }, MainActivity.this);
     }
 
 

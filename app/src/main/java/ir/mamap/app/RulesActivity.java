@@ -25,6 +25,7 @@ public class RulesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rules);
         loadingIndicatorView = findViewById(R.id.avi);
@@ -68,7 +69,7 @@ public class RulesActivity extends AppCompatActivity {
                             webView.getSettings();
                             webView.setBackgroundColor(Color.TRANSPARENT);
                             webView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
-                        }else
+                        } else
                             GeneralUtils.showToast(response.getMsg(), Toast.LENGTH_LONG, response.getOutType());
                     }
 
@@ -77,6 +78,6 @@ public class RulesActivity extends AppCompatActivity {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
                     }
-                });
+                }, RulesActivity.this);
     }
 }

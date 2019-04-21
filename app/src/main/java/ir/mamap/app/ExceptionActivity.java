@@ -28,6 +28,7 @@ public class ExceptionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_exception);
         stackTraceTextView = findViewById(R.id.StackTraceText);
@@ -91,7 +92,7 @@ public class ExceptionActivity extends AppCompatActivity {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
 
                     }
-                });
+                }, ExceptionActivity.this);
 
     }
 

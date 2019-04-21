@@ -35,6 +35,7 @@ public class SupportActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_support);
 
@@ -122,6 +123,6 @@ public class SupportActivity extends AppCompatActivity {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         btn.setVisibility(View.VISIBLE);
                     }
-                });
+                }, SupportActivity.this);
     }
 }

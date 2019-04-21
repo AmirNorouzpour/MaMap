@@ -255,7 +255,7 @@ public class ProfileFragment extends Fragment {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
 
-                });
+                }, getActivity());
     }
 
     private void editData(UserDataMenu data) {
@@ -338,6 +338,6 @@ public class ProfileFragment extends Fragment {
                         dialog.dismiss();
                     }
 
-                });
+                }, getActivity());
     }
 }

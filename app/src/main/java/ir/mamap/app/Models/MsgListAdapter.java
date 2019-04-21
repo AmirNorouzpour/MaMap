@@ -147,7 +147,7 @@ public class MsgListAdapter extends BaseAdapter {
                         dialog.dismiss();
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
-                });
+                }, mContext);
     }
 
 }

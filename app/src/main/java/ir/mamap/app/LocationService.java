@@ -71,17 +71,17 @@ public class LocationService extends Service {
             }
 
             String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + getSpeed(location) + ",,,0";
-            //GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
+            GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
             if (distance > 100 || distance == 51) {
 
-               // GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
+                GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
                 String dataEnc = null;
                 try {
                     dataEnc = CryptoHelper.encrypt(data);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                SendMyLocation(dataEnc.replace("\n", ""));
+                SendMyLocation(dataEnc.replace("\n", ""), data);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserLocLat", String.valueOf(location.getLatitude()));
                 editor.putString("UserLocLon", String.valueOf(location.getLongitude()));
@@ -106,7 +106,7 @@ public class LocationService extends Service {
         }
 
 
-        public void SendMyLocation(String data) {
+        public void SendMyLocation(String data, String date2) {
             ClientDataNonGeneric cdata = new ClientDataNonGeneric();
             cdata.setTag(data);
             NetworkManager.builder()
@@ -117,7 +117,7 @@ public class LocationService extends Service {
                         @Override
                         public void onResponse(ClientData<BaseResponse> response) {
                             if (response.getOutType() == OutType.Success) {
-                              //  GeneralUtils.showToast("DataUpdated : " + data, Toast.LENGTH_SHORT, OutType.Success);
+                                GeneralUtils.showToast("DataUpdated : " + date2, Toast.LENGTH_SHORT, OutType.Success);
                             }
                         }
 
@@ -126,7 +126,7 @@ public class LocationService extends Service {
 
                         }
 
-                    });
+                    }, Mamap.getContext());
         }
 
         @Override

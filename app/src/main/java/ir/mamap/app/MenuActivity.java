@@ -3,9 +3,6 @@ package ir.mamap.app;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.LocationManager;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,7 +19,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
@@ -55,9 +48,10 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import ir.mamap.app.Models.ClientData;
+import java.net.URLEncoder;
+import java.util.List;
+
 import ir.mamap.app.Models.ClientDataNonGeneric;
-import ir.mamap.app.Models.FriendMap;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.User;
 import ir.mamap.app.Utils.CryptoHelper;
@@ -65,12 +59,6 @@ import ir.mamap.app.Utils.CustomTypefaceSpan;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
-
-import java.lang.reflect.Type;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
 import ir.oxima.dialogbuilder.DialogBuilder;
 
 public class MenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -82,6 +70,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         bottomNav = findViewById(R.id.bottom_nav);
@@ -96,13 +85,11 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         bottomNav.setSelectedItemId(R.id.item_1);
         loadingIndicatorView = findViewById(R.id.avi);
         bottomNav.setOnNavigationItemSelectedListener(this);
+
+
         CheckPermissions();
-        LocationService mSensorService = new LocationService(Mamap.getContext());
-        Intent mServiceIntent = new Intent(Mamap.getContext(), mSensorService.getClass());
-        if (!isMyServiceRunning(mSensorService.getClass())) {
-            startService(mServiceIntent);
-        }
-        GeneralUtils.startPowerSaverIntent(MenuActivity.this);
+
+
         // FriendsFragment.showTapTarget(MenuActivity.this,bottomNav,"منو اصلی برنامه","منو اصلی برنامه جهت دسترسی به دوستان ، نقشه، تنظیمات و حساب کاربری");
     }
 
@@ -127,7 +114,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                             }
 
                             loadFragment(new FriendsFragment());
-                            // startService(new Intent(MenuActivity.this, LocationService.class));
+                            startService(new Intent(MenuActivity.this, LocationService.class));
 
                         } else {
                             GeneralUtils.showToast(response.getMsg(), Toast.LENGTH_LONG, response.getOutType());
@@ -139,7 +126,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
                     }
-                });
+                }, MenuActivity.this);
     }
 
     private void ShowLocationDialog() {
@@ -236,6 +223,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                         gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     } catch (Exception ex) {
                     }
+                    GeneralUtils.startPowerSaverIntent(MenuActivity.this);
 
                     if (!gps_enabled) {
 
@@ -246,6 +234,12 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                         dialog.setPositiveButton("باشه", d -> {
                             d.dismiss();
                             ShowLocationDialog();
+                            LocationService mSensorService = new LocationService(Mamap.getContext());
+                            Intent mServiceIntent = new Intent(Mamap.getContext(), mSensorService.getClass());
+                            if (!isMyServiceRunning(mSensorService.getClass())) {
+                                startService(mServiceIntent);
+                            }
+
                         });
                         dialog.show();
                     } else

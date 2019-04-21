@@ -111,7 +111,7 @@ public class MenuAdapter extends BaseAdapter {
                     public void onError(ANError anError) {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
-                });
+                }, mContext);
 
     }
 }

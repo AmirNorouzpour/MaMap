@@ -32,6 +32,7 @@ public class UserDataEditActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        UserConfig.getInstance().init(this, Mamap.getLanguageType());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data_edit);
 
@@ -96,8 +97,7 @@ public class UserDataEditActivity extends AppCompatActivity {
                             GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
                         SaveBtn.setVisibility(View.VISIBLE);
                         GeneralUtils.hideLoading(loadingIndicatorView);
-                        if (data.getOutType() == OutType.Success)
-                        {
+                        if (data.getOutType() == OutType.Success) {
                             finish();
                         }
                     }
@@ -107,7 +107,7 @@ public class UserDataEditActivity extends AppCompatActivity {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
                     }
-                });
+                }, UserDataEditActivity.this);
 
     }
 }

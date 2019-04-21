@@ -81,28 +81,29 @@ public class FriendsFragment extends Fragment {
         nickName.setTypeface(baseFont);
         MobileTxt.setTypeface(baseFont);
 
-        mList.setOnItemLongClickListener((arg0, v, pos, id) -> {
-            View msgView = v.findViewById(R.id.txt_message);
-            //Creating the instance of PopupMenu
-            PopupMenu popup = new PopupMenu(menuActivity, msgView);
-            //Inflating the Popup using xml file
-            popup.getMenuInflater()
-                    .inflate(R.menu.popup_menu, popup.getMenu());
 
-            //registering popup with OnMenuItemClickListener
-            popup.setOnMenuItemClickListener(item -> {
-                Toast.makeText(
-                        menuActivity,
-                        "You Clicked : " + item.getTitle(),
-                        Toast.LENGTH_SHORT
-                ).show();
-                return true;
-            });
-
-            popup.show(); //showing popup menu
-
-            return true;
-        });
+//        mList.setOnItemLongClickListener((arg0, v, pos, id) -> {
+//            View msgView = v.findViewById(R.id.txt_message);
+//            //Creating the instance of PopupMenu
+//            PopupMenu popup = new PopupMenu(menuActivity, msgView);
+//            //Inflating the Popup using xml file
+//            popup.getMenuInflater()
+//                    .inflate(R.menu.popup_menu, popup.getMenu());
+//
+//            //registering popup with OnMenuItemClickListener
+//            popup.setOnMenuItemClickListener(item -> {
+//                Toast.makeText(
+//                        menuActivity,
+//                        "You Clicked : " + item.getTitle(),
+//                        Toast.LENGTH_SHORT
+//                ).show();
+//                return true;
+//            });
+//
+//            popup.show(); //showing popup menu
+//
+//            return true;
+//        });
         TextView msgCountTxt = view.findViewById(R.id.msgCountTxt);
         ImageButton checkMsg = view.findViewById(R.id.checkMsg);
         msgCountTxt.setTypeface(baseFont);
@@ -151,7 +152,7 @@ public class FriendsFragment extends Fragment {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
 
-                });
+                }, getActivity());
 
         checkMsg.setOnClickListener(v -> showMsgList());
         User user = Mamap.User;
@@ -275,7 +276,8 @@ public class FriendsFragment extends Fragment {
                                 e.printStackTrace();
                                 return;
                             }
-                            Type listType = new TypeToken<ArrayList<FriendMap>>() {}.getType();
+                            Type listType = new TypeToken<ArrayList<FriendMap>>() {
+                            }.getType();
                             List<FriendMap> lst = new Gson().fromJson(lstStr, listType);
 
                             //List<FriendMap> lst2 = GeneralUtils.StringToArray(response.getTag().toString(), FriendMap[].class);
@@ -294,7 +296,7 @@ public class FriendsFragment extends Fragment {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                     }
 
-                });
+                }, getActivity());
     }
 
     private void showAddUser() {

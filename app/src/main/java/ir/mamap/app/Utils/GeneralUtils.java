@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.muddzdev.styleabletoast.StyleableToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import ir.mamap.app.BuildConfig;
+import ir.mamap.app.MainActivity;
+import ir.mamap.app.Mamap;
 import ir.mamap.app.Models.Constants;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.SimpleNumber;
@@ -38,6 +41,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 import ir.oxima.dialogbuilder.DialogBuilder;
 
