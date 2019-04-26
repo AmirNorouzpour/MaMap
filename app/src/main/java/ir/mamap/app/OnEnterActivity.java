@@ -1,5 +1,6 @@
 package ir.mamap.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.reflect.TypeToken;
-import com.muddzdev.styleabletoast.StyleableToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.net.URLEncoder;
@@ -33,7 +33,6 @@ public class OnEnterActivity extends AppCompatActivity {
     EditText _mobileNumber;
     ConstraintLayout _layout;
     TextView _oTPTxt, _ruleTxt, _helpTxt;
-    String typeFromMainActivity = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,37 +52,15 @@ public class OnEnterActivity extends AppCompatActivity {
         _ruleTxt.setTypeface(baseFont);
         _sendCodeBtn.setTypeface(baseFont);
         _helpTxt.setTypeface(baseFont);
-        String mobileFromIntent = getIntent().getStringExtra("Mobile");
-        typeFromMainActivity = getIntent().getStringExtra("Type");
-        _mobileNumber.setText(mobileFromIntent);
 
         _sendCodeBtn.setOnClickListener(view -> {
             String mobile = _mobileNumber.getText().toString();
             //String st = GeneralTools.readFromFile(BeforeLoginActivity.this);
-            if (mobileFromIntent == null) {
-                if (mobile.trim().length() > 0) {
-                    if (mobile.trim().length() != 11 || !mobile.trim().startsWith("09")) {
-                        StyleableToast.makeText(OnEnterActivity.this, "شماره موبایل وارد شده معتبر نیست", Toast.LENGTH_LONG, R.style.warning).show();
-                        return;
-                    }
-                    _sendCodeBtn.setVisibility(View.GONE);
-                    try {
-                        SendCode(mobile, typeFromMainActivity != null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    StyleableToast.makeText(Mamap.getContext(), "لطفا شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG, R.style.warning).show();
-                }
-            } else {
-                try {
-                    SendCode(mobile, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                SendCode(mobile, OnEnterActivity.this,false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         });
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -98,19 +75,21 @@ public class OnEnterActivity extends AppCompatActivity {
 
     }
 
-    public void SendCode(String mobileNumber, boolean needVerification) throws Exception {
-        OnEnterActivity context = OnEnterActivity.this;
+    public static void SendCode(String mobileNumber, Activity context, boolean sendCode) throws Exception {
 
-        AVLoadingIndicatorView loadingIndicatorView = findViewById(R.id.avi);
+        AVLoadingIndicatorView loadingIndicatorView = context.findViewById(R.id.avi);
         GeneralUtils.showLoading(loadingIndicatorView);
 
         String mobileEncoded = CryptoHelper.encrypt(mobileNumber);
         mobileEncoded = URLEncoder.encode(mobileEncoded, "utf-8");
 
+        Button sendCodeBtn = context.findViewById(R.id.SendCodeBtn);
+        if (sendCodeBtn != null)
+            sendCodeBtn.setVisibility(View.INVISIBLE);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/VerificationCode/RequestVerification")
                 .addQueryParameter("Mobile", mobileEncoded)
-                .addQueryParameter("NeedVerification", Boolean.toString(needVerification))
+                .addQueryParameter("SendCode", sendCode + "")
                 .get(new TypeToken<ClientData<User>>() {
                 }, new INetwork<ClientData<User>>() {
                     @Override
@@ -119,6 +98,8 @@ public class OnEnterActivity extends AppCompatActivity {
                         GeneralUtils.showToast(response.getMsg(), Toast.LENGTH_LONG, response.getOutType());
 
                         if (response.getOutType() == OutType.Error) {
+                            if (sendCodeBtn != null)
+                                sendCodeBtn.setVisibility(View.VISIBLE);
                             return;
                         }
 
@@ -127,25 +108,26 @@ public class OnEnterActivity extends AppCompatActivity {
                             intent.putExtra("MobileNumber", mobileNumber);
                             User user = response.getEntity();
                             intent.putExtra("User", user);
-                            startActivity(intent);
-                        } else if (response.getEntityId() > 0) {
+                            context.startActivity(intent);
+                        } else {
                             GeneralUtils.hideLoading(loadingIndicatorView);
                             Intent intent = new Intent(context, VerificationActivity.class);
                             intent.putExtra("MobileNumber", mobileNumber);
-                            intent.putExtra("NeedVerification", response.getEntityId());
-                            intent.putExtra("Register", typeFromMainActivity);
-                            startActivity(intent);
+                            intent.putExtra("SendCode", sendCode);
+                            context.startActivity(intent);
                         }
-                        _sendCodeBtn.setVisibility(View.VISIBLE);
+                        if (sendCodeBtn != null)
+                            sendCodeBtn.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         GeneralUtils.showToast(anError.getErrorBody(), Toast.LENGTH_LONG, OutType.Error);
                         GeneralUtils.hideLoading(loadingIndicatorView);
-                        _sendCodeBtn.setVisibility(View.VISIBLE);
+                        if (sendCodeBtn != null)
+                            sendCodeBtn.setVisibility(View.VISIBLE);
                     }
-                }, OnEnterActivity.this);
+                }, context);
     }
 
 }

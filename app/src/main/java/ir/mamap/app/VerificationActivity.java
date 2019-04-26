@@ -35,7 +35,6 @@ public class VerificationActivity extends AppCompatActivity {
     Button okBtn;//sendCodeAgainBtn,
     TextView sendCodeText, OTPTxt, remainTimeText;
     ConstraintLayout _layout;
-    int needVerification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,6 @@ public class VerificationActivity extends AppCompatActivity {
         editText1 = findViewById(R.id.EditText1);
         editText2 = findViewById(R.id.EditText2);
         editText3 = findViewById(R.id.EditText3);
-        editText4 = findViewById(R.id.EditText4);
         editText4 = findViewById(R.id.EditText4);
         sendCodeText = findViewById(R.id.SendCodeText);
         //sendCodeAgainBtn = findViewById(R.id.SendCodeAgainBtn);
@@ -67,10 +65,8 @@ public class VerificationActivity extends AppCompatActivity {
         OTPTxt.setTypeface(baseFont);
 
         String mobileNumber = getIntent().getStringExtra("MobileNumber");
-        String registerTag = getIntent().getStringExtra("Register");
-        needVerification = getIntent().getIntExtra("NeedVerification", 0);
         sendCodeText.setText("کد 4 رقمی ارسال شده به " + mobileNumber + " را وارد کنید");
-
+        Boolean isSendCode = getIntent().getBooleanExtra("SendCode", false);
 
         editText1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -153,10 +149,9 @@ public class VerificationActivity extends AppCompatActivity {
                     String code = getCode();
 
                     NetworkManager.builder()
-                            .setUrl(Mamap.BaseUrl + "/api/VerificationCode/CheckVerificationCode/{Mobile}/{Code}/{NeedVerification}")
+                            .setUrl(Mamap.BaseUrl + "/api/VerificationCode/CheckVerificationCode/{Mobile}/{Code}")
                             .addQueryParameter("Mobile", mobileNumber)
                             .addQueryParameter("Code", code)
-                            .addQueryParameter("NeedVerification", Integer.toString(needVerification))
                             .get(new TypeToken<ClientDataNonGeneric>() {
                             }, new INetwork<ClientDataNonGeneric>() {
 
@@ -165,20 +160,21 @@ public class VerificationActivity extends AppCompatActivity {
                                     GeneralUtils.hideLoading(loadingIndicatorView);
                                     GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
                                     if (data.getOutType() == OutType.Success) {
-                                        Intent intent = new Intent(VerificationActivity.this, RegisterActivity.class);
-                                        intent.putExtra("MobileNumber", mobileNumber);
-                                        intent.putExtra("NeedVerification", needVerification);
-                                        intent.putExtra("Register", registerTag);
-                                        if (data.getTag() != null)
-                                            intent.putExtra("UserName", data.getTag().toString());
-                                        startActivity(intent);
+                                        if (!isSendCode) {
+                                            Intent intent = new Intent(VerificationActivity.this, RegisterActivity.class);
+                                            intent.putExtra("MobileNumber", mobileNumber);
+                                            startActivity(intent);
+                                        } else {
+                                            Intent intent = new Intent(VerificationActivity.this, ForgotPasswordActivity.class);
+                                            intent.putExtra("MobileNumber", mobileNumber);
+                                            startActivity(intent);
+                                        }
                                     }
                                 }
 
                                 @Override
                                 public void onError(ANError anError) {
                                     GeneralUtils.hideLoading(loadingIndicatorView);
-                                    GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
                                 }
                             }, VerificationActivity.this);
                 }
@@ -193,8 +189,8 @@ public class VerificationActivity extends AppCompatActivity {
         LinearLayout _formHolder = findViewById(R.id.formHolder);
         GeneralUtils.setMargins(_formHolder, 0, (int) (height * 0.4), 0, 0);
 
-        BackView defaultBackgeroundDrawable = new BackView();
-        _layout.setBackground(defaultBackgeroundDrawable);
+        BackView defaultBackgroundDrawable = new BackView();
+        _layout.setBackground(defaultBackgroundDrawable);
 
 
         new CountDownTimer(120000, 1000) {

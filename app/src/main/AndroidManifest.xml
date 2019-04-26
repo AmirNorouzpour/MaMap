@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ForgotPasswordActivity"></activity>
         <activity android:name=".UpgradeActivity" />
         <activity android:name=".SupportActivity" />
         <activity android:name=".RulesActivity" />
@@ -30,19 +31,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ExceptionActivity"  />
+        <activity android:name=".ExceptionActivity" />
         <activity android:name=".OnEnterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".VerificationActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".MenuActivity"  />
+        <activity android:name=".MenuActivity" />
 
         <service android:name=".FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".LocationService"
             android:enabled="true" />
@@ -66,7 +66,6 @@
 
         <activity android:name=".AddUserActivity" />
         <activity android:name=".MessageListActivity" />
-
     </application>
 
 </manifest>

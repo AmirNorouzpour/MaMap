@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,11 +19,9 @@ import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import ir.mamap.app.Models.ClientData;
-import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Models.Token;
 import ir.mamap.app.Models.User;
-import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
@@ -30,8 +29,7 @@ import ir.mamap.app.network.NetworkManager;
 public class RegisterActivity extends AppCompatActivity {
     EditText MobileTxt, PasswordTxt, RePasswordTxt, UserNameTxt;
     Button RegisterBtn;
-    ConstraintLayout _layout;
-    LinearLayout _formHolder;
+    LinearLayout _formHolder, _layout;
     TextView IHaveMeTxt;
     String mobileNumber;
 
@@ -58,7 +56,6 @@ public class RegisterActivity extends AppCompatActivity {
         RegisterBtn.setTypeface(baseFont);
         IHaveMeTxt.setTypeface(baseFont);
 
-        UserNameTxt.requestFocus();
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -69,23 +66,22 @@ public class RegisterActivity extends AppCompatActivity {
         _layout.setBackground(defaultBackgeroundDrawable);
 
         mobileNumber = getIntent().getStringExtra("MobileNumber");
-        String userName = getIntent().getStringExtra("UserName");
-        String register = getIntent().getStringExtra("Register");
-        int needVerification = getIntent().getIntExtra("NeedVerification", 0);
 
         MobileTxt.setText(mobileNumber);
-        UserNameTxt.setText(userName);
         UserNameTxt.requestFocus();
         RegisterBtn.setOnClickListener(v -> {
+
             //todo : check it
 //            if (PasswordTxt.getText().toString() != RePasswordTxt.getText().toString() || PasswordTxt.getText() == null || PasswordTxt.getText().toString().length() == 0) {
 //                GeneralUtils.showToast("رمز عبور وارد شده با تکرارش برابر نیست", Toast.LENGTH_SHORT, OutType.Error);
 //                return;
 //            }
+
             if (UserNameTxt.getText() == null) {
                 GeneralUtils.showToast("نام کاریری خود را انتخاب کنید", Toast.LENGTH_SHORT, OutType.Error);
                 return;
             }
+            RegisterBtn.setVisibility(View.INVISIBLE);
             User user = new User();
             user.setMobile(mobileNumber);
             user.setPassword(PasswordTxt.getText().toString());
@@ -94,52 +90,8 @@ public class RegisterActivity extends AppCompatActivity {
             AVLoadingIndicatorView loadingIndicatorView = findViewById(R.id.avi);
             GeneralUtils.showLoading(loadingIndicatorView);
 
-            if (needVerification == 1 && register == null) {
-                UpdatePassword(loadingIndicatorView);
-            } else {
-                AddUser(user, context, loadingIndicatorView);
-            }
+            AddUser(user, context, loadingIndicatorView);
         });
-    }
-
-    private void UpdatePassword(AVLoadingIndicatorView loadingIndicatorView) {
-        User user = new User();
-
-        try {
-            user.setMobile(CryptoHelper.encrypt(mobileNumber));
-            user.setPassword(CryptoHelper.encrypt(PasswordTxt.getText().toString()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        NetworkManager.builder()
-                .setUrl(Mamap.BaseUrl + "/api/user/UpdatePassword")
-                .addApplicationJsonBody(user)
-                .post(new TypeToken<ClientDataNonGeneric>() {
-                }, new INetwork<ClientDataNonGeneric>() {
-
-                    @Override
-                    public void onResponse(ClientDataNonGeneric data) {
-                        GeneralUtils.hideLoading(loadingIndicatorView);
-                        GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
-                        if (data.getOutType() == OutType.Success) {
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            intent.putExtra("MobileNumber", mobileNumber);
-                            User user = new User();
-                            user.setUserId(data.getEntityId());
-                            intent.putExtra("User", user);
-
-
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        GeneralUtils.hideLoading(loadingIndicatorView);
-                        GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
-                    }
-                }, RegisterActivity.this);
     }
 
 
@@ -153,13 +105,14 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(ClientData<Token> data) {
                         GeneralUtils.hideLoading(loadingIndicatorView);
+                        RegisterBtn.setVisibility(View.VISIBLE);
                         GeneralUtils.showToast(data.getMsg(), Toast.LENGTH_LONG, data.getOutType());
                         if (data.getOutType() == OutType.Success) {
                             Token token = data.getEntity();
                             Intent intent = new Intent(context, MenuActivity.class);
                             intent.putExtra("userId", token.userId);
                             GeneralUtils.writeToken(token, token.userId, RegisterActivity.this);
-                            String FToken = null;
+                            String FToken;
                             FToken = FirebaseInstanceId.getInstance().getToken();
                             LoginActivity.sendRegistrationToServer(FToken, RegisterActivity.this);
                             startActivity(intent);
@@ -169,9 +122,11 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onError(ANError anError) {
                         GeneralUtils.hideLoading(loadingIndicatorView);
-                        GeneralUtils.showToast("امکان ارتباط وجود ندارد", Toast.LENGTH_LONG, OutType.Error);
+                        RegisterBtn.setVisibility(View.VISIBLE);
                     }
                 }, RegisterActivity.this);
     }
+
+
 }
 

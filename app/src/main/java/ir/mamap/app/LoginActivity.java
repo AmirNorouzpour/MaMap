@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         Password.requestFocus();
         LoginCodeBtn.setOnClickListener(view -> {
             LoginCodeBtn.setVisibility(View.GONE);
-            LoginRequest(mobileNumber, Password.getText().toString());
+            LoginRequest(MobileNumber.getText().toString(), Password.getText().toString());
 
         });
         RememberMeTxt = findViewById(R.id.RememberMeTxt);
@@ -71,9 +71,16 @@ public class LoginActivity extends AppCompatActivity {
         title.setTypeface(baseFont);
         RememberMeTxt.setOnClickListener(v ->
         {
-            Intent intent = new Intent(LoginActivity.this, OnEnterActivity.class);
-            intent.putExtra("Mobile", MobileNumber.getText().toString());
-            startActivity(intent);
+            if (MobileNumber.getText().toString() == null) {
+                GeneralUtils.showToast("ابتدا شماره موبایل خود را وارد کنید", Toast.LENGTH_SHORT, OutType.Error);
+                return;
+            }
+            try {
+                RememberMeTxt.setVisibility(View.INVISIBLE);
+                OnEnterActivity.SendCode(MobileNumber.getText().toString(), LoginActivity.this, true);
+            } catch (Exception e) {
+
+            }
         });
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
