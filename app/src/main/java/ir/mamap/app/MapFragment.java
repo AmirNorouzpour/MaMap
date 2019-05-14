@@ -71,6 +71,7 @@ public class MapFragment extends Fragment {
 //        }
         StatusTxt = view.findViewById(R.id.StatusTxt);
         UpdateLocationLayout = view.findViewById(R.id.UpdateLocation);
+        LinearLayout UpdateLocationParent = view.findViewById(R.id.UpdateLocationParent);
         MenuActivity menuActivity = (MenuActivity) getActivity();
         Typeface baseFont = Typeface.createFromAsset(menuActivity.getAssets(), "fonts/iran_san.ttf");
         StatusTxt.setTypeface(baseFont);
@@ -80,7 +81,9 @@ public class MapFragment extends Fragment {
 //                        handler.postDelayed(() -> {
 //                            SetText(0, true);
 //                        }, 15000);
-            GetUserLocation(_friendMap.getUserId(), true, true);
+            if (_friendMap != null)
+                GetUserLocation(_friendMap.getUserId(), true, true);
+            else UpdateLocationParent.setVisibility(View.GONE);
         });
         return view;
     }
@@ -288,7 +291,7 @@ public class MapFragment extends Fragment {
                         if (millisUntilFinished / 1000 > 60) {
                             int min = (int) millisUntilFinished / 60000;
                             int sec = (int) millisUntilFinished % 60000;
-                            String secStr = sec > 9000 ? sec / 1000 + "" : "0" + sec / 1000;
+                            String secStr = sec > 9001 ? sec / 1000 + "" : "0" + sec / 1000;
                             StatusTxt.setText("بروزرسانی : " + min + ":" + secStr);
                         } else
                             StatusTxt.setText("بروزرسانی : " + millisUntilFinished / 1000);

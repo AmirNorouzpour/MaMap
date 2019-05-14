@@ -28,7 +28,7 @@ import java.util.TimerTask;
 
 public class LocationService extends Service {
 
-    private static final String TAG = "BOOMBOOMTESTGPS";
+    private static final String TAG = "TEST";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;

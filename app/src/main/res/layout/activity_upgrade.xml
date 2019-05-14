@@ -20,4 +20,23 @@
 
     </info.hoang8f.android.segmented.SegmentedGroup>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/request_location_updates_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Foreground Service"/>
+
+        <Button
+            android:id="@+id/remove_location_updates_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Stop Foreground Service"/>
+
+    </LinearLayout>
+
 </LinearLayout>

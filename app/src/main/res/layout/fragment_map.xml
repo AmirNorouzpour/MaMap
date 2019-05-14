@@ -28,6 +28,7 @@
         android:tooltipText="مرا بیاب" />
 
     <LinearLayout
+        android:id="@+id/UpdateLocationParent"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginBottom="16dp"

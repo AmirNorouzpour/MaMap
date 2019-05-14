@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".Mamap"
@@ -43,9 +44,21 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".MyForeGroundService"
+            android:enabled="true"
+            android:exported="true" />
+
         <service
             android:name=".LocationService"
             android:enabled="true" />
+
+        <!-- Foreground services in Q+ require type. -->
+        <service
+            android:name=".LocationUpdatesService"
+            android:enabled="true"
+            android:exported="true" />
 
         <receiver
             android:name=".RestarterBroadcastReceiver"
