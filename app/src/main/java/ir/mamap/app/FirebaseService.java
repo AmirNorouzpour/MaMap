@@ -1,28 +1,21 @@
 package ir.mamap.app;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.location.Location;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.os.IBinder;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
@@ -46,41 +39,14 @@ import ir.mamap.app.Models.DeviceInformation;
 import ir.mamap.app.Models.OutType;
 import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
-import ir.mamap.app.Utils.Utils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
+import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
+
 public class FirebaseService extends FirebaseMessagingService {
-
-
-    // Used in checking for runtime permissions.
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
-    // The BroadcastReceiver used to listen from broadcasts from the service.
-    private MyReceiver myReceiver;
-
-    // A reference to the service used to get location updates.
-    private LocationUpdatesService mService = null;
-
-    // Tracks the bound state of the service.
-    private boolean mBound = false;
-
-    // Monitors the state of the connection to the service.
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mBound = false;
-        }
-    };
 
 
     private static final String TAG = "FirebaseService";
@@ -174,10 +140,12 @@ public class FirebaseService extends FirebaseMessagingService {
                         String dataEnc = CryptoHelper.encrypt(data);
                         SendUserLocation(dataEnc.replace("\n", ""));
 
-                        myReceiver = new MyReceiver();
-
-                       // startMyOwnForeground();
-
+//                        Intent intent = new Intent(Mamap.getContext(), MyForeGroundService.class);
+//                        intent.setAction(MyForeGroundService.ACTION_START_FOREGROUND_SERVICE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                            startMyOwnForeground();
+                        else
+                            startForeground(1, new Notification());
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -222,52 +190,28 @@ public class FirebaseService extends FirebaseMessagingService {
         context.sendBroadcast(intent);
     }
 
-    private void startMyOwnForeground() {
-
-//        if (Utils.requestingLocationUpdates(this)) {
-        onStart();
-//        }
-
-    }
 
 
-    protected void onStart() {
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startMyOwnForeground(){
+        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
+        String channelName = "My Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
 
-        // Restore the state of the buttons when the activity (re)launches.
-
-        // Bind to the service. If the service is in foreground mode, this signals to the service
-        // that since this activity is in the foreground, the service can exit foreground mode.
-        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
-                Context.BIND_AUTO_CREATE);
-        mBound = true;
-
-        mService.requestLocationUpdates();
-    }
-
-
-    protected void onStop() {
-        if (mBound) {
-            // Unbind from the service. This signals to the service that this activity is no longer
-            // in the foreground, and the service can respond by promoting itself to a foreground
-            // service.
-            unbindService(mServiceConnection);
-            mBound = false;
-            mService.removeLocationUpdates();
-        }
-
-    }
-
-
-    private class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
-            if (location != null) {
-                Toast.makeText(Mamap.getContext(), Utils.getLocationText(location),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("App is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(2, notification);
     }
 
 
