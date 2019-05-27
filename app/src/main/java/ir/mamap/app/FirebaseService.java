@@ -87,10 +87,6 @@ public class FirebaseService extends FirebaseMessagingService {
                 if (object.has("TRId"))
                     trId = object.getInt("TRId");
                 if (catId == 1) {
-                    SharedPreferences sharedPreferences = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE);
-                    String lat = sharedPreferences.getString("UserLocLat", null);
-                    String lon = sharedPreferences.getString("UserLocLon", null);
-                    String speed = sharedPreferences.getString("UserSpeed", null);
 
                     Intent intent = new Intent(this, ForegroundService.class);
                     intent.putExtra("tag", tag);

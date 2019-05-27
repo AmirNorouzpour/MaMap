@@ -75,7 +75,7 @@ public class ForegroundService extends Service implements GoogleApiClient.Connec
                     SendUserLocation(dataEnc.replace("\n", ""));
 
                     System.out.println(String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
-                    new Handler(Looper.getMainLooper()).post(() -> playSound());
+                   // new Handler(Looper.getMainLooper()).post(() -> playSound());
 
                     Log.i("LOCATION_TAG", String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
                     mFusedLocationProviderClient.removeLocationUpdates(locationCallback);

@@ -11,6 +11,7 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -86,7 +87,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         loadingIndicatorView = findViewById(R.id.avi);
         bottomNav.setOnNavigationItemSelectedListener(this);
 
-
+        GetLocationAndSetIntoSP();
         CheckPermissions();
 
 
@@ -114,7 +115,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                             }
 
                             loadFragment(new FriendsFragment());
-                            startService(new Intent(MenuActivity.this, LocationService.class));
+                           // startService(new Intent(MenuActivity.this, LocationService.class));
 
                         } else {
                             GeneralUtils.showToast(response.getMsg(), Toast.LENGTH_LONG, response.getOutType());
@@ -236,9 +237,9 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                             ShowLocationDialog();
                             LocationService mSensorService = new LocationService(Mamap.getContext());
                             Intent mServiceIntent = new Intent(Mamap.getContext(), mSensorService.getClass());
-                            if (!isMyServiceRunning(mSensorService.getClass())) {
-                                startService(mServiceIntent);
-                            }
+//                            if (!isMyServiceRunning(mSensorService.getClass())) {
+//                                startService(mServiceIntent);
+//                            }
 
                         });
                         dialog.show();
@@ -254,7 +255,21 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         }).check();
     }
 
+    private void GetLocationAndSetIntoSP() {
+        GPSTracker location = new GPSTracker(Mamap.getContext());
+        if (location.getLatitude() != 0) {
+            int speed = (int) ((location.getSpeed() * 3600) / 1000);
+            SharedPreferences.Editor sharedPreferencesUser = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE).edit();
+            sharedPreferencesUser.putString("UserLocLat", String.valueOf(location.getLatitude()));
+            sharedPreferencesUser.putString("UserLocLon", String.valueOf(location.getLongitude()));
+            sharedPreferencesUser.putString("UserSpeed", String.valueOf(speed));
+            sharedPreferencesUser.apply();
+        }
+        location.stopUsingGPS();
+    }
+
     private void GoNextActivity() {
+        GetLocationAndSetIntoSP();
         GetUserAccount();
     }
 
