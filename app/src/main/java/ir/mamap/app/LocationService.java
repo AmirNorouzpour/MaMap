@@ -71,10 +71,10 @@ public class LocationService extends Service {
             }
 
             String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + getSpeed(location) + ",,,0";
-            GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
-            if (distance > 100 || distance == 51) {
+            //GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
+            if (distance > 300 || distance == 51) {
 
-                GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
+               // GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
                 String dataEnc = null;
                 try {
                     dataEnc = CryptoHelper.encrypt(data);
@@ -117,7 +117,7 @@ public class LocationService extends Service {
                         @Override
                         public void onResponse(ClientData<BaseResponse> response) {
                             if (response.getOutType() == OutType.Success) {
-                                GeneralUtils.showToast("DataUpdated : " + date2, Toast.LENGTH_SHORT, OutType.Success);
+                               // GeneralUtils.showToast("DataUpdated : " + date2, Toast.LENGTH_SHORT, OutType.Success);
                             }
                         }
 

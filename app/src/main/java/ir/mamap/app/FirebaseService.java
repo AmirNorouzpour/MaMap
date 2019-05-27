@@ -1,20 +1,16 @@
 package ir.mamap.app;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.BatteryManager;
 import android.os.Build;
-import android.os.SystemClock;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,19 +28,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
-import ir.mamap.app.Models.BaseResponse;
-import ir.mamap.app.Models.ClientData;
 import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.DeviceInformation;
 import ir.mamap.app.Models.OutType;
-import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
-
-import static android.content.Context.MODE_PRIVATE;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
 
 public class FirebaseService extends FirebaseMessagingService {
 
@@ -103,53 +92,24 @@ public class FirebaseService extends FirebaseMessagingService {
                     String lon = sharedPreferences.getString("UserLocLon", null);
                     String speed = sharedPreferences.getString("UserSpeed", null);
 
-                    GPSTracker gps = new GPSTracker(Mamap.getContext());
-                    if ((!gps.isGPSEnabled && gps.isNetworkEnabled) || gps.getLatitude() == 0)
-                        SystemClock.sleep(5000);
-                    if (gps.getLatitude() != 0) {
-                        lat = String.valueOf(gps.getLatitude());
-                        lon = String.valueOf(gps.getLongitude());
-                        speed = String.valueOf(gps.getSpeed());
-                    }
-                    gps.stopUsingGPS();
-                    try {
-                        int batLevel = 0;
-                        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
-                        }
-//                        Intent notificationIntent = new Intent(Mamap.getContext(), LocationService.class);
-//
-//                        PendingIntent pendingIntent = PendingIntent.getActivity(Mamap.getContext(), 0,
-//                                notificationIntent, 0);
-//
-//                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//                        String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? createNotificationChannel(notificationManager) : "";
-//                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId);
-//                        Notification notification = notificationBuilder.setOngoing(true)
-//                                .setSmallIcon(R.mipmap.ic_launcher)
-//                                .setPriority(PRIORITY_MAX)
-//                                .setContentText("saLAM")
-//                                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-//                                .setContentIntent(pendingIntent)
-//                                .build();
-//
-//                        startForeground(1337, notification);
+                    Intent intent = new Intent(this, ForegroundService.class);
+                    intent.putExtra("tag", tag);
+                    intent.putExtra("trId", trId);
+                    ContextCompat.startForegroundService(getApplicationContext(), intent);
 
-                        String data = tag + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
-                        String dataEnc = CryptoHelper.encrypt(data);
-                        SendUserLocation(dataEnc.replace("\n", ""));
 
-//                        Intent intent = new Intent(Mamap.getContext(), MyForeGroundService.class);
-//                        intent.setAction(MyForeGroundService.ACTION_START_FOREGROUND_SERVICE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                            startMyOwnForeground();
-                        else
-                            startForeground(1, new Notification());
+//                    try {
+//                        int batLevel = 0;
+//                        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                            batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+//                        }
+//
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
                 }
                 if (catId == 7)
                     updateMyActivity(Mamap.getContext(), String.valueOf(catId), String.valueOf(tag));
@@ -190,52 +150,6 @@ public class FirebaseService extends FirebaseMessagingService {
         context.sendBroadcast(intent);
     }
 
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void startMyOwnForeground(){
-        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
-        String channelName = "My Background Service";
-        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
-        chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        assert manager != null;
-        manager.createNotificationChannel(chan);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        Notification notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("App is running in background")
-                .setPriority(NotificationManager.IMPORTANCE_MIN)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .build();
-        startForeground(2, notification);
-    }
-
-
-    private void SendUserLocation(String data) {
-        ClientDataNonGeneric cdata = new ClientDataNonGeneric();
-        cdata.setTag(data);
-        NetworkManager.builder()
-                .setUrl(Mamap.BaseUrl + "/api/Tracking/SetUserMapData")
-                .addApplicationJsonBody(cdata)
-                .post(new TypeToken<ClientData<BaseResponse>>() {
-                }, new INetwork<ClientData<BaseResponse>>() {
-                    @Override
-                    public void onResponse(ClientData<BaseResponse> response) {
-                        if (response.getOutType() == OutType.Success) {
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-
-                    }
-
-                }, Mamap.getContext());
-    }
     // [START on_new_token]
 
     /**

@@ -45,20 +45,12 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name=".MyForeGroundService"
-            android:enabled="true"
-            android:exported="true" />
 
         <service
             android:name=".LocationService"
             android:enabled="true" />
 
-        <!-- Foreground services in Q+ require type. -->
-        <service
-            android:name=".LocationUpdatesService"
-            android:enabled="true"
-            android:exported="true" />
+        <service android:name=".ForegroundService"/>
 
         <receiver
             android:name=".RestarterBroadcastReceiver"

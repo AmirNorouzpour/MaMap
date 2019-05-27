@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void CheckVersion() {
         GeneralUtils.showLoading(loadingIndicatorView);
         NetworkManager.builder()
@@ -157,7 +156,12 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(ANError anError) {
-                        GeneralUtils.hideLoading(loadingIndicatorView);
+                        // GeneralUtils.hideLoading(loadingIndicatorView);
+                        if (anError.getErrorCode() == 0) {
+                            Intent intent = new Intent(MainActivity.this, ExceptionActivity.class);
+                            intent.putExtra("ANError", anError);
+                            startActivity(intent);
+                        }
                     }
                 }, MainActivity.this);
     }
