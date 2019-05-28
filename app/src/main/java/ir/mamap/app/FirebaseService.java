@@ -93,7 +93,6 @@ public class FirebaseService extends FirebaseMessagingService {
                     intent.putExtra("trId", trId);
                     ContextCompat.startForegroundService(getApplicationContext(), intent);
 
-
 //                    try {
 //                        int batLevel = 0;
 //                        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
