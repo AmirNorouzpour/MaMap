@@ -2,7 +2,6 @@ package ir.mamap.app;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,15 +22,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.gson.reflect.TypeToken;
-
-import ir.mamap.app.Models.ClientData;
-import ir.mamap.app.Models.ClientDataNonGeneric;
-import ir.mamap.app.Models.FriendMap;
-import ir.mamap.app.Models.OutType;
-import ir.mamap.app.Utils.CryptoHelper;
-import ir.mamap.app.Utils.GeneralUtils;
-import ir.mamap.app.network.INetwork;
-import ir.mamap.app.network.NetworkManager;
+import com.mapbox.android.core.location.LocationEngineListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,23 +32,32 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 
-import ir.map.sdk_common.MaptexLatLng;
-import ir.map.sdk_map.wrapper.MaptexBitmapDescriptorFactory;
-import ir.map.sdk_map.wrapper.MaptexCameraUpdateFactory;
-import ir.map.sdk_map.wrapper.MaptexMap;
-import ir.map.sdk_map.wrapper.MaptexMarker;
-import ir.map.sdk_map.wrapper.MaptexMarkerOptions;
-import ir.map.sdk_map.wrapper.SupportMaptexFragment;
+import ir.mamap.app.Models.ClientData;
+import ir.mamap.app.Models.ClientDataNonGeneric;
+import ir.mamap.app.Models.FriendMap;
+import ir.mamap.app.Models.OutType;
+import ir.mamap.app.Utils.CryptoHelper;
+import ir.mamap.app.Utils.GeneralUtils;
+import ir.mamap.app.network.INetwork;
+import ir.mamap.app.network.NetworkManager;
+import ir.map.sdk_map.annotations.Marker;
+import ir.map.sdk_map.annotations.MarkerOptions;
+import ir.map.sdk_map.camera.CameraUpdateFactory;
+import ir.map.sdk_map.geometry.LatLng;
+import ir.map.sdk_map.location.LocationComponent;
+import ir.map.sdk_map.maps.MapirMap;
+import ir.map.sdk_map.maps.SupportMapFragment;
 import ir.oxima.dialogbuilder.DialogBuilder;
 
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements LocationEngineListener {
 
     public static final int FOCUSED_ZOOM_LEVEL = 15;
     private FriendMap _friendMap = null;
-    MaptexMarker friendMarker;
     LinearLayout UpdateLocationLayout;
     TextView StatusTxt;
+    private MapirMap mapirMap;
+    private Marker friendMarker;
 
     @Nullable
     @Override
@@ -89,7 +89,6 @@ public class MapFragment extends Fragment {
     }
 
     private Location _location;
-    private MaptexMap maptexMap;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -98,10 +97,9 @@ public class MapFragment extends Fragment {
 
         fab.setOnClickListener(v -> {
             if (_location != null)
-                maptexMap.animateCamera(MaptexCameraUpdateFactory.newLatLngZoom(new MaptexLatLng(_location.getLatitude(), _location.getLongitude()), FOCUSED_ZOOM_LEVEL));
+                mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), FOCUSED_ZOOM_LEVEL));
         });
         UpdateFriendLocation(_friendMap, true);
-
     }
 
     boolean isFirstTime = true;
@@ -110,63 +108,62 @@ public class MapFragment extends Fragment {
         if (friendMarker != null)
             friendMarker.remove();
         MenuActivity menuActivity = (MenuActivity) getActivity();
-        SupportMaptexFragment fragment = (SupportMaptexFragment) getChildFragmentManager().findFragmentById(R.id.myMapView);
-        fragment.getMaptexAsync(map -> {
-            maptexMap = map;
-            if (maptexMap != null) { // Checks if we were successful in obtaining the map
-                //region get permissions
-                //TODO : This block of code is necessary for android level 6.0 or high
-                if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                    ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                    ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                //endregion get permissions
 
-                if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    maptexMap.setMyLocationEnabled(true);
-                maptexMap.setBuildingsEnabled(true);
+        SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.myMapView);
+        fragment.getMapAsync(mapirMap -> {
 
-                maptexMap.setOnMyLocationChangeListener(location -> {
-                            if (isFirstTime && _friendMap == null) {
-                                isFirstTime = false;
-                                maptexMap.animateCamera(MaptexCameraUpdateFactory.newLatLngZoom(new MaptexLatLng(location.getLatitude(), location.getLongitude()), FOCUSED_ZOOM_LEVEL));
+                    if (mapirMap != null) {
+                        //region get permissions
+                        if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(),
+                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                            ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                        if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                            ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                        //endregion get permissions
+
+                        if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            LocationComponent component = mapirMap.getLocationComponent();
+                            component.activateLocationComponent(menuActivity);
+                            component.setLocationComponentEnabled(true);
+                            if (component.getLocationEngine() != null) {
+                                component.getLocationEngine().addLocationEngineListener(this);
                             }
-                            _location = location;
+                            mapirMap.animateCamera(CameraUpdateFactory
+                                    .newLatLngZoom(new LatLng(component.getLastKnownLocation().getLatitude(),
+                                            component.getLastKnownLocation().getLongitude()), FOCUSED_ZOOM_LEVEL));
                         }
-                );
 
-                if (friendMap != null) {
-                    if (friendMap.isNotAvailable()) {
-                        GeneralUtils.showToast("کاربر مورد نظر از دسترس خارج شده است", Toast.LENGTH_LONG, OutType.Warning);
-                        return;
                     }
-                    MaptexLatLng userLoc = new MaptexLatLng(friendMap.getLatitude(), friendMap.getLongitude());
-                    Bitmap bitmap = GeneralUtils.getBitmap(getContext(), R.drawable.ic_pin);
-                    friendMarker = maptexMap.addMarker(new MaptexMarkerOptions()
-                            .position(userLoc).title(friendMap.getNickName())
-                            .icon(MaptexBitmapDescriptorFactory.fromBitmap(bitmap)));
 
-                    maptexMap.setOnMarkerClickListener(v -> showUser(v));
-                    // maptexMap.addPolyline((new MaptexPolylineOptions()).add(userLoc, new MaptexLatLng(userLoc.latitude + 10, userLoc.longitude + 10)));
-                    //maptexMap.addCircle(new MaptexCircleOptions().center(userLoc).fillColor(Color.parseColor("#cce6ff")));
-                    maptexMap.animateCamera(MaptexCameraUpdateFactory.newLatLngZoom(userLoc, FOCUSED_ZOOM_LEVEL));
-                    if (isInit) {
-                        StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
-//                        final Handler handler = new Handler();
+                    if (friendMap != null) {
+                        if (friendMap.isNotAvailable()) {
+                            GeneralUtils.showToast("کاربر مورد نظر از دسترس خارج شده است", Toast.LENGTH_LONG, OutType.Warning);
+                            return;
+                        }
+                        LatLng userLoc = new LatLng(friendMap.getLatitude(), friendMap.getLongitude());
+                        friendMarker = mapirMap.addMarker(new MarkerOptions().position(userLoc).title(friendMap.getNickName()).snippet(friendMap.getNickName()));
+
+
+                        mapirMap.setOnMarkerClickListener(v -> showUser(v));
+                        mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, FOCUSED_ZOOM_LEVEL));
+                        if (isInit) {
+                            StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
+//                       final Handler handler = new Handler();
 //                        handler.postDelayed(() -> {
 //                            SetText(0, true);
 //                        }, 15000);
-                        GetUserLocation(friendMap.getUserId(), true, false);
-                    }
+                            GetUserLocation(friendMap.getUserId(), true, false);
+                        }
 
-                }
-            }
-        });
+                    }
+                });
+
+
     }
 
 
-    private boolean showUser(MaptexMarker marker) {
+    private boolean showUser(Marker marker) {
 
         UserView myView = new UserView(getContext(), _friendMap);
         int speed = (int) ((_friendMap.getSpeed() * 3600) / 1000);
@@ -209,7 +206,7 @@ public class MapFragment extends Fragment {
 //        dialogBuilder.setMessage(_friendMap.getNickName() + " با سرعت " + speed + " KM/H " + date + " در مختصات مشخص شده بوده است");
 
         dialogBuilder.show();
-        GeneralUtils.showToast(marker.getPosition().latitude + " " + marker.getPosition().longitude, Toast.LENGTH_LONG, OutType.Success);
+        //GeneralUtils.showToast(marker.getPosition().getLatitude() + " " + marker.getPosition().getLongitude(), Toast.LENGTH_LONG, OutType.Success);
         return true;
     }
 
@@ -338,4 +335,20 @@ public class MapFragment extends Fragment {
     }
 
 
+    @Override
+    public void onConnected() {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            if (isFirstTime && _friendMap == null) {
+                isFirstTime = false;
+                mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), FOCUSED_ZOOM_LEVEL));
+            }
+            _location = location;
+        }
+
+    }
 }
