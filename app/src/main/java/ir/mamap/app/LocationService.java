@@ -70,11 +70,11 @@ public class LocationService extends Service {
                 distance = preLocation.distanceTo(location);
             }
 
-            String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + getSpeed(location) + ",,,0";
+            String data = "0,,," + location.getLatitude() + ",,," + location.getLongitude() + ",,," + GeneralUtils.getSpeed(location) + ",,,0";
             //GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_LONG, OutType.Error);
             if (distance > 300 || distance == 51) {
 
-               // GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
+                // GeneralUtils.showToast("distance : " + distance, Toast.LENGTH_SHORT, OutType.Success);
                 String dataEnc = null;
                 try {
                     dataEnc = CryptoHelper.encrypt(data);
@@ -85,24 +85,16 @@ public class LocationService extends Service {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserLocLat", String.valueOf(location.getLatitude()));
                 editor.putString("UserLocLon", String.valueOf(location.getLongitude()));
-                editor.putString("UserSpeed", String.valueOf(getSpeed(location)));
+                editor.putString("UserSpeed", String.valueOf(GeneralUtils.getSpeed(location)));
                 editor.apply();
             }
 
             SharedPreferences.Editor sharedPreferencesUser = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE).edit();
             sharedPreferencesUser.putString("UserLocLat", String.valueOf(location.getLatitude()));
             sharedPreferencesUser.putString("UserLocLon", String.valueOf(location.getLongitude()));
-            sharedPreferencesUser.putString("UserSpeed", String.valueOf(getSpeed(location)));
+            sharedPreferencesUser.putString("UserSpeed", String.valueOf(GeneralUtils.getSpeed(location)));
             sharedPreferencesUser.apply();
 
-        }
-
-        public float getSpeed(Location location) {
-            if (location != null) {
-                int speedKmh = (int) ((location.getSpeed() * 3600) / 1000);
-                return speedKmh;
-            }
-            return 0;
         }
 
 
@@ -117,7 +109,7 @@ public class LocationService extends Service {
                         @Override
                         public void onResponse(ClientData<BaseResponse> response) {
                             if (response.getOutType() == OutType.Success) {
-                               // GeneralUtils.showToast("DataUpdated : " + date2, Toast.LENGTH_SHORT, OutType.Success);
+                                // GeneralUtils.showToast("DataUpdated : " + date2, Toast.LENGTH_SHORT, OutType.Success);
                             }
                         }
 

@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -50,11 +51,18 @@ public class ForegroundService extends Service implements GoogleApiClient.Connec
     private LocationCallback locationCallback;
     private NotificationManager notificationManager;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private static ForegroundService instance = null;
+
+
+    public static ForegroundService getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        runInForeground("سرویس", "سروبس در حال اجرا ...", R.drawable.ic_launcher);
+        instance = this;
+        runInForeground("سرویس", "سرویس مامپ در حال اجرا ...", R.drawable.ic_sync_black_24dp);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
         locationCallback = new LocationCallback() {
@@ -74,23 +82,34 @@ public class ForegroundService extends Service implements GoogleApiClient.Connec
                     SendUserLocation(dataEnc.replace("\n", ""));
 
                     System.out.println(String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
-                   // new Handler(Looper.getMainLooper()).post(() -> playSound());
+                    // new Handler(Looper.getMainLooper()).post(() -> playSound());
 
                     Log.i("LOCATION_TAG", String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
-                    mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                    googleApiClient.disconnect();
-                    stopForeground(true);
-                    stopSelf();
+
+                    stopService();
                 }
             }
         };
         googleApiClient.connect();
     }
 
+    public void stopService() {
+        mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        googleApiClient.disconnect();
+        stopForeground(true);
+        stopSelf();
+        instance = null;
+    }
+
     private void playSound() {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
         r.play();
+    }
+
+    @Override
+    public void onDestroy() {
+        instance = null;
     }
 
     private void SendUserLocation(String data) {
@@ -126,6 +145,7 @@ public class ForegroundService extends Service implements GoogleApiClient.Connec
 
     long tagId = 0;
     long trId = 0;
+    private static final long UPDATE_INTERVAL = 1000, FASTEST_INTERVAL = 1000; // = 1 second
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -134,12 +154,19 @@ public class ForegroundService extends Service implements GoogleApiClient.Connec
         return START_STICKY;
     }
 
+    protected LocationManager locationManager;
+
     @SuppressLint("MissingPermission")
     private void initLocationService() {
         final LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(0);
-        locationRequest.setFastestInterval(0);
+        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (isGPSEnabled)
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        else
+            locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
         mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {

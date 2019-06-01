@@ -1,7 +1,9 @@
 package ir.mamap.app;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -40,6 +42,8 @@ import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
+import ir.map.sdk_map.annotations.Icon;
+import ir.map.sdk_map.annotations.IconFactory;
 import ir.map.sdk_map.annotations.Marker;
 import ir.map.sdk_map.annotations.MarkerOptions;
 import ir.map.sdk_map.camera.CameraUpdateFactory;
@@ -48,6 +52,8 @@ import ir.map.sdk_map.location.LocationComponent;
 import ir.map.sdk_map.maps.MapirMap;
 import ir.map.sdk_map.maps.SupportMapFragment;
 import ir.oxima.dialogbuilder.DialogBuilder;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class MapFragment extends Fragment implements LocationEngineListener {
@@ -96,8 +102,11 @@ public class MapFragment extends Fragment implements LocationEngineListener {
         fab.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
         fab.setOnClickListener(v -> {
-            if (_location != null)
-                mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), FOCUSED_ZOOM_LEVEL));
+            if (_location != null && mapirMap != null) {
+                double latitude = _location.getLatitude();
+                double longitude = _location.getLongitude();
+                mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), FOCUSED_ZOOM_LEVEL));
+            }
         });
         UpdateFriendLocation(_friendMap, true);
     }
@@ -112,52 +121,59 @@ public class MapFragment extends Fragment implements LocationEngineListener {
         SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.myMapView);
         fragment.getMapAsync(mapirMap -> {
 
-                    if (mapirMap != null) {
-                        //region get permissions
-                        if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(),
-                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                            ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                        if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                            ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                        //endregion get permissions
 
-                        if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                                && ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            LocationComponent component = mapirMap.getLocationComponent();
-                            component.activateLocationComponent(menuActivity);
-                            component.setLocationComponentEnabled(true);
-                            if (component.getLocationEngine() != null) {
-                                component.getLocationEngine().addLocationEngineListener(this);
-                            }
-                            mapirMap.animateCamera(CameraUpdateFactory
-                                    .newLatLngZoom(new LatLng(component.getLastKnownLocation().getLatitude(),
-                                            component.getLastKnownLocation().getLongitude()), FOCUSED_ZOOM_LEVEL));
-                        }
+            if (mapirMap != null) {
+                this.mapirMap = mapirMap;
+                //region get permissions
+                if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(menuActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                //endregion get permissions
 
+                if (ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(menuActivity.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    LocationComponent component = mapirMap.getLocationComponent();
+                    component.activateLocationComponent(menuActivity);
+                    component.setLocationComponentEnabled(true);
+                    if (component.getLocationEngine() != null) {
+                        component.getLocationEngine().addLocationEngineListener(this);
                     }
 
-                    if (friendMap != null) {
-                        if (friendMap.isNotAvailable()) {
-                            GeneralUtils.showToast("کاربر مورد نظر از دسترس خارج شده است", Toast.LENGTH_LONG, OutType.Warning);
-                            return;
-                        }
-                        LatLng userLoc = new LatLng(friendMap.getLatitude(), friendMap.getLongitude());
-                        friendMarker = mapirMap.addMarker(new MarkerOptions().position(userLoc).title(friendMap.getNickName()).snippet(friendMap.getNickName()));
+                    if (component.getLastKnownLocation() != null) {
+                        double latitude = component.getLastKnownLocation().getLatitude();
+                        double longitude = component.getLastKnownLocation().getLongitude();
+                        mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), FOCUSED_ZOOM_LEVEL));
+                    }
+                }
 
+            }
 
-                        mapirMap.setOnMarkerClickListener(v -> showUser(v));
-                        mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, FOCUSED_ZOOM_LEVEL));
-                        if (isInit) {
-                            StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
+            if (friendMap != null) {
+                if (friendMap.isNotAvailable()) {
+                    GeneralUtils.showToast("کاربر مورد نظر از دسترس خارج شده است", Toast.LENGTH_LONG, OutType.Warning);
+                    return;
+                }
+                LatLng userLoc = new LatLng(friendMap.getLatitude(), friendMap.getLongitude());
+                Bitmap bitmap = GeneralUtils.getBitmap(Mamap.getContext(), R.drawable.ic_marker);
+                Icon icon = IconFactory.getInstance(menuActivity).fromBitmap(bitmap);
+
+                friendMarker = mapirMap.addMarker(new MarkerOptions().position(userLoc).title(friendMap.getNickName()).snippet(friendMap.getNickName()).setIcon(icon));
+
+                mapirMap.setOnMarkerClickListener(v -> showUser(v));
+                mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, FOCUSED_ZOOM_LEVEL));
+                if (isInit) {
+                    StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
 //                       final Handler handler = new Handler();
 //                        handler.postDelayed(() -> {
 //                            SetText(0, true);
 //                        }, 15000);
-                            GetUserLocation(friendMap.getUserId(), true, false);
-                        }
+                    GetUserLocation(friendMap.getUserId(), true, false);
+                }
 
-                    }
-                });
+            }
+        });
 
 
     }
@@ -311,6 +327,7 @@ public class MapFragment extends Fragment implements LocationEngineListener {
 
     private String GenerateData() {
         GPSTracker gps = new GPSTracker(Mamap.getContext());
+        SharedPreferences.Editor sharedPreferencesUser = Mamap.getContext().getSharedPreferences("UserLoc", MODE_PRIVATE).edit();
 //        if (!gps.isGPSEnabled && gps.isNetworkEnabled)
 //            SystemClock.sleep(2000);
         double lat = 0, lon = 0, speed = 0;
@@ -318,6 +335,10 @@ public class MapFragment extends Fragment implements LocationEngineListener {
             lat = gps.getLatitude();
             lon = gps.getLongitude();
             speed = gps.getSpeed();
+            sharedPreferencesUser.putString("UserLocLat", String.valueOf(gps.getLatitude()));
+            sharedPreferencesUser.putString("UserLocLon", String.valueOf(gps.getLongitude()));
+            sharedPreferencesUser.putString("UserSpeed", String.valueOf(GeneralUtils.getSpeed(gps.speed)));
+            sharedPreferencesUser.apply();
         }
         gps.stopUsingGPS();
         try {

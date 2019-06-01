@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -28,9 +31,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
+import ir.mamap.app.Models.BaseResponse;
+import ir.mamap.app.Models.ClientData;
 import ir.mamap.app.Models.ClientDataNonGeneric;
 import ir.mamap.app.Models.DeviceInformation;
 import ir.mamap.app.Models.OutType;
+import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
@@ -80,18 +86,53 @@ public class FirebaseService extends FirebaseMessagingService {
                 //String title = object.getString("title");
                 // sendNotification(title);
                 int catId = object.getInt("CatId");
-                int trId = 0;
-                int tag = 0;
+                int trId = 0, tag = 0, sType = 1;
                 if (object.has("Tag"))
                     tag = object.getInt("Tag");
                 if (object.has("TRId"))
                     trId = object.getInt("TRId");
+                if (object.has("sType"))
+                    sType = object.getInt("sType");
                 if (catId == 1) {
 
                     Intent intent = new Intent(this, ForegroundService.class);
                     intent.putExtra("tag", tag);
                     intent.putExtra("trId", trId);
-                    ContextCompat.startForegroundService(getApplicationContext(), intent);
+
+                    if (sType == 1) {
+                        if (!GeneralUtils.isServiceRunning(ForegroundService.class.getName())) {
+                            ContextCompat.startForegroundService(getApplicationContext(), intent);
+
+                            final Handler handler = new Handler(Looper.getMainLooper());
+                            handler.postDelayed(() -> {
+                                if (GeneralUtils.isServiceRunning(ForegroundService.class.getName()))
+                                    ForegroundService.getInstance().stopService();
+                            }, 60000);
+
+                        } else {
+                            ForegroundService.getInstance().stopService();
+                        }
+                    } else {
+                        GPSTracker gps = new GPSTracker(Mamap.getContext());
+                        if ((!gps.isGPSEnabled && gps.isNetworkEnabled) || gps.getLatitude() == 0)
+                            SystemClock.sleep(5000);
+                        if (gps.getLatitude() != 0) {
+                            String lat = String.valueOf(gps.getLatitude());
+                            String lon = String.valueOf(gps.getLongitude());
+                            String speed = String.valueOf((int) ((gps.getSpeed() * 3600) / 1000));
+                            gps.stopUsingGPS();
+                            String data = tag + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
+                            String dataEnc = null;
+
+                            try {
+                                dataEnc = CryptoHelper.encrypt(data);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            SendUserLocation(dataEnc.replace("\n", ""));
+                        }
+                    }
+
 
 //                    try {
 //                        int batLevel = 0;
@@ -131,6 +172,28 @@ public class FirebaseService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
     }
     // [END receive_message]
+
+    private void SendUserLocation(String data) {
+        ClientDataNonGeneric cdata = new ClientDataNonGeneric();
+        cdata.setTag(data);
+        NetworkManager.builder()
+                .setUrl(Mamap.BaseUrl + "/api/Tracking/SetUserMapData")
+                .addApplicationJsonBody(cdata)
+                .post(new TypeToken<ClientData<BaseResponse>>() {
+                }, new INetwork<ClientData<BaseResponse>>() {
+                    @Override
+                    public void onResponse(ClientData<BaseResponse> response) {
+                        if (response.getOutType() == OutType.Success) {
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                    }
+
+                }, Mamap.getContext());
+    }
 
     // This function will create an intent. This intent must take as parameter the "unique_name" that you registered your activity with
     static void updateMyActivity(Context context, String message, String tag) {

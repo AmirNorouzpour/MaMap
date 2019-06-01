@@ -1,6 +1,7 @@
 package ir.mamap.app.Utils;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +25,7 @@ import com.muddzdev.styleabletoast.StyleableToast;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import ir.mamap.app.BuildConfig;
+import ir.mamap.app.GPSTracker;
 import ir.mamap.app.MainActivity;
 import ir.mamap.app.Mamap;
 import ir.mamap.app.Models.Constants;
@@ -39,12 +42,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
 import ir.oxima.dialogbuilder.DialogBuilder;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static ir.mamap.app.Mamap.getContext;
 
@@ -307,6 +312,41 @@ public class GeneralUtils {
         return list.size() > 0;
     }
 
+    public static boolean isServiceRunning(String serviceName) {
+        boolean serviceRunning = false;
+        ActivityManager am = (ActivityManager) Mamap.getContext().getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> l = am.getRunningServices(50);
+        Iterator<ActivityManager.RunningServiceInfo> i = l.iterator();
+        while (i.hasNext()) {
+            ActivityManager.RunningServiceInfo runningServiceInfo = i
+                    .next();
+
+            if (runningServiceInfo.service.getClassName().equals(serviceName)) {
+                serviceRunning = true;
+
+                if (runningServiceInfo.foreground) {
+                    //service run in foreground
+                }
+            }
+        }
+        return serviceRunning;
+    }
+
+    public static float getSpeed(Location location) {
+        if (location != null) {
+            int speedKmh = (int) ((location.getSpeed() * 3600) / 1000);
+            return speedKmh;
+        }
+        return 0;
+    }
+
+    public static float getSpeed(float speed) {
+        if (speed > 0) {
+            int speedKmh = (int) ((speed * 3600) / 1000);
+            return speedKmh;
+        }
+        return 0;
+    }
 }
 
 

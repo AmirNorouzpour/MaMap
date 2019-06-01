@@ -23,7 +23,8 @@ public class User implements Serializable {
     private String email;
     @SerializedName("ExpireDateTimeStr")
     private String expDateText;
-
+    @SerializedName("SearchMethod")
+    private int searchMethod;
 
     public FriendMap getFriend() {
         return friend;
@@ -49,6 +50,14 @@ public class User implements Serializable {
         return userId;
     }
 
+    public int getSearchMethod() {
+        return searchMethod;
+    }
+
+    public void setSearchMethod(int searchMethod) {
+        this.searchMethod = searchMethod;
+    }
+
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -68,12 +77,15 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getExpDateText() {
         return expDateText;
     }
+
     public String getEmail() {
         return email;
     }
+
     public boolean isNotAvailable() {
         return notAvailable;
     }

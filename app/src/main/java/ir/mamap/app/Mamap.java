@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.gsonparserfactory.GsonParserFactory;
 import com.google.gson.Gson;
@@ -34,10 +35,11 @@ import okhttp3.OkHttpClient;
 public class Mamap extends MultiDexApplication {
 
     private static Context sContext;
-    //    public static String BaseUrl = "http://api.tasnimfurniture.com";
     public static String BaseUrl = "https://mamap.ir";
-    //public static String BaseUrl = "http://192.168.1.101:8080";
+    //  public static String BaseUrl = "http://192.168.1.102:8080";
+
     public static ir.mamap.app.Models.User User = null;
+
 
     public static Context getContext() {
         return sContext;
@@ -51,7 +53,7 @@ public class Mamap extends MultiDexApplication {
         // Setup handler for uncaught exceptions.
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
-        Mapir.getInstance(this, "mapir_ujhggl55415jhjf");
+        Mapir.getInstance(this, "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU5MmI2Y2U3YjY1NTBjZjA4ZDc4NjA5ZDUwMjIwMmQ5NTFlYTU1YjBjYTI2M2JmYzNlODcyNjc2YTU5OGU5OTQ3OWM1NzFmNWRkZTNmOTgwIn0.eyJhdWQiOiJteWF3ZXNvbWVhcHAiLCJqdGkiOiJlOTJiNmNlN2I2NTUwY2YwOGQ3ODYwOWQ1MDIyMDJkOTUxZWE1NWIwY2EyNjNiZmMzZTg3MjY3NmE1OThlOTk0NzljNTcxZjVkZGUzZjk4MCIsImlhdCI6MTUzMjk1NDQ1NiwibmJmIjoxNTMyOTU0NDU2LCJleHAiOjE1MzI5NTgwNTYsInN1YiI6IiIsInNjb3BlcyI6WyJiYXNpYyIsImVtYWlsIl19.wbWGkA7aQpYsWN8gOMMKyTH2dcst5qVVymDc0-rI6nxwswp3QNa2fMpkdING897HH4PDlqLjWaLzWsuxk5Z1pGjuRmaCns9fmvuM7-x2ZGcj3067EHuHyDrtUVEvPXkPgFvCzNiPNoVGTJ7o14JV44Ag02-lCANjsy0AT4RK4z2afaQvykCE7FIbNdp9VUcfuEBSvT_D9x26aYKkAmPSmJrxDtX5MeAcnGDYpD8f2tHz2oaxbo8wi97wvTn-KVR-gmzzPXeiR_e5HwDfPeXZFY4pjB_KMwRhLr0L8Z05CMfgsNkwUeKTCBwvUMM6r9pXDhf_scLFQM9N7FgZeTW_PQ");
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)

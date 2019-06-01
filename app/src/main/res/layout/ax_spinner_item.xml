@@ -8,4 +8,5 @@
     android:fontFamily="@font/iran_sani"
     android:padding="@dimen/_8sdp"
     android:singleLine="true"
+    android:text="سلام"
     android:textAlignment="inherit" />
