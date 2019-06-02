@@ -41,7 +41,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="30"
                     android:gravity="right|bottom"
-                    android:textSize="@dimen/_11sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:paddingRight="@dimen/_4sdp"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
@@ -63,7 +63,7 @@
                     android:layout_weight="1"
                     android:gravity="right|top"
                     android:paddingRight="@dimen/_4sdp"
-                    android:textSize="@dimen/_10sdp"
+                    android:textSize="@dimen/_11sdp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorWhite" />
 
