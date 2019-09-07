@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -46,7 +45,7 @@ import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
 
-public class ForegroundService extends Service {//implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public class ForegroundService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private GoogleApiClient googleApiClient;
     private IBinder mIBinder;
     private LocationCallback locationCallback;
@@ -64,41 +63,39 @@ public class ForegroundService extends Service {//implements GoogleApiClient.Con
         super.onCreate();
         instance = this;
         runInForeground("سرویس", "سرویس مامپ در حال اجرا ...", R.drawable.ic_sync_black_24dp);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                if (locationResult != null) {
+                    int speed = (int) ((locationResult.getLastLocation().getSpeed() * 3600) / 1000);
 
+                    String data = tagId + ",,," + locationResult.getLastLocation().getLatitude() + ",,," + locationResult.getLastLocation().getLongitude() + ",,," + speed + ",,," + trId;
+                    String dataEnc = null;
+                    try {
+                        dataEnc = CryptoHelper.encrypt(data);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    SendUserLocation(dataEnc.replace("\n", ""));
 
-//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-//        googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
-//        locationCallback = new LocationCallback() {
-//            @Override
-//            public void onLocationResult(LocationResult locationResult) {
-//                super.onLocationResult(locationResult);
-//                if (locationResult != null) {
-//                    int speed = (int) ((locationResult.getLastLocation().getSpeed() * 3600) / 1000);
-//
-//                    String data = tagId + ",,," + locationResult.getLastLocation().getLatitude() + ",,," + locationResult.getLastLocation().getLongitude() + ",,," + speed + ",,," + trId;
-//                    String dataEnc = null;
-//                    try {
-//                        dataEnc = CryptoHelper.encrypt(data);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    SendUserLocation(dataEnc.replace("\n", ""));
-//
-//                    System.out.println(String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
-//                    // new Handler(Looper.getMainLooper()).post(() -> playSound());
-//
-//                    Log.i("LOCATION_TAG", String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
-//
-//                    stopService();
-//                }
-//            }
-//        };
-//        googleApiClient.connect();
+                    System.out.println(String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
+                    // new Handler(Looper.getMainLooper()).post(() -> playSound());
+
+                    Log.i("LOCATION_TAG", String.format("%s %s", locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
+
+                    stopService();
+                }
+            }
+        };
+        googleApiClient.connect();
     }
 
     public void stopService() {
-//        mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
-//        googleApiClient.disconnect();
+        mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        googleApiClient.disconnect();
         stopForeground(true);
         stopSelf();
         instance = null;
@@ -114,8 +111,6 @@ public class ForegroundService extends Service {//implements GoogleApiClient.Con
     public void onDestroy() {
         instance = null;
     }
-
-
 
     private void SendUserLocation(String data) {
         ClientDataNonGeneric cdata = new ClientDataNonGeneric();
@@ -156,27 +151,6 @@ public class ForegroundService extends Service {//implements GoogleApiClient.Con
     public int onStartCommand(Intent intent, int flags, int startId) {
         tagId = (int) intent.getExtras().get("tag");
         trId = (int) intent.getExtras().get("trId");
-
-        GPSTracker gps = new GPSTracker(Mamap.getContext());
-        if ((!gps.isGPSEnabled && gps.isNetworkEnabled) || gps.getLatitude() == 0)
-            SystemClock.sleep(5000);
-        if (gps.getLatitude() != 0) {
-            String lat = String.valueOf(gps.getLatitude());
-            String lon = String.valueOf(gps.getLongitude());
-            String speed = String.valueOf((int) ((gps.getSpeed() * 3600) / 1000));
-            gps.stopUsingGPS();
-            String data = tagId + ",,," + lat + ",,," + lon + ",,," + speed + ",,," + trId;
-            String dataEnc = null;
-
-            try {
-                dataEnc = CryptoHelper.encrypt(data);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            SendUserLocation(dataEnc.replace("\n", ""));
-        }
-
-        stopService();
         return START_STICKY;
     }
 
@@ -190,8 +164,9 @@ public class ForegroundService extends Service {//implements GoogleApiClient.Con
         if (isGPSEnabled)
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         else
-            locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+            locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setNumUpdates(1);
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
         mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
@@ -201,6 +176,20 @@ public class ForegroundService extends Service {//implements GoogleApiClient.Con
         });
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        initLocationService();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     private void runInForeground(String title, String subTitle, int icon) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

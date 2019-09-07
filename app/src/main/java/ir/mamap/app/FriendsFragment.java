@@ -39,6 +39,7 @@ import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
+import ir.tapsell.sdk.Tapsell;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -77,7 +78,6 @@ public class FriendsFragment extends Fragment {
             GetUserFriends(menuActivity, loadingIndicatorView);
             pullToRefresh.setRefreshing(false);
         });
-
         nickName.setTypeface(baseFont);
         MobileTxt.setTypeface(baseFont);
 

@@ -114,4 +114,8 @@ public class MenuAdapter extends BaseAdapter {
                 }, mContext);
 
     }
+
+    public void clearData() {
+        mItem.clear();
+    }
 }

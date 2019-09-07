@@ -90,12 +90,10 @@ public class UserView extends LinearLayout {
         if (sharedPreferences.getString("UserLocLat", "") != "") {
             String lat = sharedPreferences.getString("UserLocLat", "");
             String lon = sharedPreferences.getString("UserLocLon", "");
-            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" + "saddr=" + lat + "," + lon + "&daddr=" + _friendMap.getLatitude() + "," + _friendMap.getLongitude()));
-            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+            Uri uri = Uri.parse("geo:" + lat + "," + lon + "?q=" + Uri.encode(_friendMap.getLatitude() + "," + _friendMap.getLongitude() + "(" + _friendMap.getNickName() + ")"));
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
             _context.startActivity(intent);
         }
-
-
     }
 
 

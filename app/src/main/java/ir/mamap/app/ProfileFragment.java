@@ -64,7 +64,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileFragment extends Fragment {
     ListView mList;
-    ArrayList<UserDataMenu> arrayItem;
     AVLoadingIndicatorView loadingIndicatorView;
     FloatingActionButton profilePictureBtn;
     TextView nickName, txtExpireDate, mobileTxt;
@@ -219,7 +218,7 @@ public class ProfileFragment extends Fragment {
 //    }
 
     private void GetUserMenus() {
-        arrayItem = new ArrayList<>();
+        ArrayList arrayItem = new ArrayList<>();
         MenuActivity menuActivity = (MenuActivity) getActivity();
         MenuAdapter mAdapter = new MenuAdapter(menuActivity, arrayItem);
         GeneralUtils.showLoading(loadingIndicatorView);
@@ -237,12 +236,11 @@ public class ProfileFragment extends Fragment {
                             Type listType = new TypeToken<List<UserDataMenu>>() {
                             }.getType();
                             List<UserDataMenu> lst = new Gson().fromJson(data, listType);
-
                             //List<FriendMap> lst2 = GeneralUtils.StringToArray(response.getTag().toString(), FriendMap[].class);
                             for (int i = 0; i < lst.size(); i++) {
                                 arrayItem.add(lst.get(i));
-
                             }
+
                             mList.setAdapter(mAdapter);
                         } else {
                             GeneralUtils.hideLoading(loadingIndicatorView);
@@ -262,22 +260,26 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(getActivity(), UserDataEditActivity.class);
         intent.putExtra("Data", data);
         startActivityForResult(intent, 10);
-        // getActivity().startActivityForResult(intent, 22);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 10) {
-            if (resultCode == Activity.RESULT_OK) {
-                GetUserMenus();
-                MenuActivity menuActivity = (MenuActivity) getActivity();
-                menuActivity.GetUserAccount();
-                User user = Mamap.User;
-                nickName.setText(user.getNickName());
-                mobileTxt.setText(user.getMobile());
-                txtExpireDate.setText(user.getExpDateText());
-            }
+            GetUserMenus();
+            MenuActivity menuActivity = (MenuActivity) getActivity();
+            menuActivity.GetUserAccount(false);
+            User user = Mamap.User;
+            nickName.setText(user.getNickName());
+            mobileTxt.setText(user.getMobile());
+            txtExpireDate.setText(user.getExpDateText());
+
+            MenuAdapter menuAdapter = (MenuAdapter) mList.getAdapter();
+            menuAdapter.clearData();
+            menuAdapter.notifyDataSetChanged();
+
+            GetUserMenus();
+
         }
 
         if (requestCode == 1) {

@@ -94,7 +94,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         // FriendsFragment.showTapTarget(MenuActivity.this,bottomNav,"منو اصلی برنامه","منو اصلی برنامه جهت دسترسی به دوستان ، نقشه، تنظیمات و حساب کاربری");
     }
 
-    public void GetUserAccount() {
+    public void GetUserAccount(boolean withLoadFriendsFragment) {
         GeneralUtils.showLoading(loadingIndicatorView);
         NetworkManager.builder()
                 .setUrl(Mamap.BaseUrl + "/api/user/GetUserAccount")
@@ -113,9 +113,9 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
                                 e.printStackTrace();
                                 return;
                             }
-
-                            loadFragment(new FriendsFragment());
-                           // startService(new Intent(MenuActivity.this, LocationService.class));
+                            if (withLoadFriendsFragment)
+                                loadFragment(new FriendsFragment());
+                            // startService(new Intent(MenuActivity.this, LocationService.class));
 
                         } else {
                             GeneralUtils.showToast(response.getMsg(), Toast.LENGTH_LONG, response.getOutType());
@@ -270,7 +270,7 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
 
     private void GoNextActivity() {
         GetLocationAndSetIntoSP();
-        GetUserAccount();
+        GetUserAccount(true);
     }
 
     private void ShowLocationRequestDialog() {
