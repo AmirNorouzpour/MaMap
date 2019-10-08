@@ -110,7 +110,8 @@ public class FirebaseService extends FirebaseMessagingService {
                             }, 60000);
 
                         } else {
-                            ForegroundService.getInstance().stopService();
+                            if (ForegroundService.getInstance() != null)
+                                ForegroundService.getInstance().stopService();
                         }
                     } else {
                         GPSTracker gps = new GPSTracker(Mamap.getContext());

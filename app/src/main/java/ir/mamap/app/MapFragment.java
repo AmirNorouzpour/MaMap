@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,13 @@ import ir.map.sdk_map.location.LocationComponent;
 import ir.map.sdk_map.maps.MapirMap;
 import ir.map.sdk_map.maps.SupportMapFragment;
 import ir.oxima.dialogbuilder.DialogBuilder;
+import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
+import ir.tapsell.sdk.TapsellAdRequestListener;
+import ir.tapsell.sdk.TapsellAdRequestOptions;
+import ir.tapsell.sdk.TapsellAdShowListener;
+import ir.tapsell.sdk.TapsellRewardListener;
+import ir.tapsell.sdk.TapsellShowOptions;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -81,15 +89,20 @@ public class MapFragment extends Fragment implements LocationEngineListener {
         MenuActivity menuActivity = (MenuActivity) getActivity();
         Typeface baseFont = Typeface.createFromAsset(menuActivity.getAssets(), "fonts/iran_san.ttf");
         StatusTxt.setTypeface(baseFont);
+        GetUserExpLong();
         UpdateLocationLayout.setOnClickListener(v -> {
-            StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
+            if (!isFree)
+                showAd();
+            else {
+                StatusTxt.setText("در حال پیدا کردن موقعیت جدید");
 //                        final Handler handler = new Handler();
 //                        handler.postDelayed(() -> {
 //                            SetText(0, true);
 //                        }, 15000);
-            if (_friendMap != null)
-                GetUserLocation(_friendMap.getUserId(), true, true);
-            else UpdateLocationParent.setVisibility(View.GONE);
+                if (_friendMap != null)
+                    GetUserLocation(_friendMap.getUserId(), true, true);
+                else UpdateLocationParent.setVisibility(View.GONE);
+            }
         });
         return view;
     }
@@ -106,9 +119,18 @@ public class MapFragment extends Fragment implements LocationEngineListener {
                 double latitude = _location.getLatitude();
                 double longitude = _location.getLongitude();
                 mapirMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), FOCUSED_ZOOM_LEVEL));
+
             }
         });
-        UpdateFriendLocation(_friendMap, true);
+        if (isFree)
+            UpdateFriendLocation(_friendMap, true);
+        else
+            UpdateFriendLocation(_friendMap, false);
+        Tapsell.setRewardListener((tapsellAd, completed) -> {
+            if (completed && tapsellAd.isRewardedAd()) {
+                UpdateFriendLocation(_friendMap, false);
+            }
+        });
     }
 
     boolean isFirstTime = true;
@@ -292,6 +314,7 @@ public class MapFragment extends Fragment implements LocationEngineListener {
     }
 
     CountDownTimer timer;
+    boolean isFree = false;
 
     private void SetText(int exp, boolean startTimer) {
         if (exp > 0) {
@@ -301,6 +324,7 @@ public class MapFragment extends Fragment implements LocationEngineListener {
                 timer = new CountDownTimer(exp, 1000) {
 
                     public void onTick(long millisUntilFinished) {
+                        isFree = false;
                         if (millisUntilFinished / 1000 > 60) {
                             int min = (int) millisUntilFinished / 60000;
                             int sec = (int) millisUntilFinished % 60000;
@@ -312,11 +336,17 @@ public class MapFragment extends Fragment implements LocationEngineListener {
 
                     public void onFinish() {
                         StatusTxt.setText("بروزرسانی");
+                        isFree = true;
+                        requestAd();
                     }
 
                 }.start();
             }
-        } else StatusTxt.setText("بروزرسانی");
+        } else {
+            StatusTxt.setText("بروزرسانی");
+            isFree = true;
+            requestAd();
+        }
 
     }
 
@@ -371,5 +401,59 @@ public class MapFragment extends Fragment implements LocationEngineListener {
             _location = location;
         }
 
+    }
+
+    private TapsellAd ad = null;
+
+    private void requestAd() {
+        Tapsell.requestAd(getActivity(),
+                null,
+                new TapsellAdRequestOptions(),
+                new TapsellAdRequestListener() {
+
+                    @Override
+                    public void onAdAvailable(TapsellAd tapsellAd) {
+                        ad = tapsellAd;
+                    }
+
+                    @Override
+                    public void onError(String message) {
+
+                    }
+
+                    @Override
+                    public void onNoAdAvailable() {
+
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+                    }
+
+                    @Override
+                    public void onExpiring(TapsellAd tapsellAd) {
+
+                    }
+                });
+    }
+
+    private void showAd() {
+        if (ad == null) {
+            return;
+        }
+
+        ad.show(getActivity(),
+                new TapsellShowOptions(),
+                new TapsellAdShowListener() {
+                    @Override
+                    public void onOpened(TapsellAd tapsellAd) {
+                    }
+
+                    @Override
+                    public void onClosed(TapsellAd tapsellAd) {
+                    }
+                });
+
+        ad = null;
     }
 }

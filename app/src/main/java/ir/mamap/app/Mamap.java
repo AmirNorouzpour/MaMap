@@ -36,8 +36,8 @@ import okhttp3.OkHttpClient;
 public class Mamap extends MultiDexApplication {
 
     private static Context sContext;
-    public static String BaseUrl = "https://mamap.ir";
-    //  public static String BaseUrl = "http://192.168.1.102:8080";
+//    public static String BaseUrl = "https://mamap.ir";
+      public static String BaseUrl = "http://51.77.79.32:8040";
 
     public static ir.mamap.app.Models.User User = null;
 

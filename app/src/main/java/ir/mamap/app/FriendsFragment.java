@@ -39,7 +39,6 @@ import ir.mamap.app.Utils.CryptoHelper;
 import ir.mamap.app.Utils.GeneralUtils;
 import ir.mamap.app.network.INetwork;
 import ir.mamap.app.network.NetworkManager;
-import ir.tapsell.sdk.Tapsell;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
